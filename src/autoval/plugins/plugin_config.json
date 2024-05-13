@@ -1,0 +1,22 @@
+[
+    {
+        "class" : "Credentials",
+        "module" : "autoval.lib.host.credentials",
+        "name" : "credential_manager"
+    },
+    {
+        "class" : "RemoteModuleExecutor",
+        "module" : "autoval.lib.utils.remote_module_executor",
+        "name" : "remote_module_executor"
+    },
+    {
+        "class" : "FileSystemConfigDataSource",
+        "module" : "autoval.lib.utils.filesystem_config_datasource",
+        "name" : "config_datasource"
+    },
+    {
+        "class" : "AutoValCLI",
+        "module" : "autoval.cli.cli_parser",
+        "name" : "autoval_cli"
+    }
+]

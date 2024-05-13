@@ -1,0 +1,10 @@
+{
+  "control_server_logdir": "/home/himanshumall/autoval/logs/cs/",
+  "control_server_tmpdir": "/tmp/autoval/logs/cs/",
+  "dut_logdir": "/var/facebook/logs/havoc/logs/",
+  "dut_tmpdir": "/var/facebook/logs/havoc/tmp/",
+  "resultsdir": "/home/himanshumall/autoval/results/",
+  "ssh_key_path": ["/var/facebook/credentials/USERNAME/ssh/id_rsa", "/var/facebook/credentials/USERNAME/ssh/global_cert"],
+  "plugin_config_path" : "plugins/plugin_config.json",
+  "repository_dir": "/home/himanshumall/autoval/repo"
+}
