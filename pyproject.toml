@@ -36,6 +36,9 @@ publish = ["build", "twine"]
 "Bug reports" = "https://github.com/opencomputeproject/ocp-diag-autoval/issues"
 "Source" = "https://github.com/opencomputeproject/ocp-diag-autoval"
 
+[project.scripts]
+autoval_test_runner = "autoval.autoval_test_runner:main"
+
 [tool.setuptools.package-data]
 "*" = ["*.json"]
 
