@@ -26,6 +26,8 @@ from autoval.lib.utils.result_handler import ResultHandler
 from autoval.lib.utils.site_utils import SiteUtils
 
 
+# pyre-fixme[3]: Return type must be annotated.
+# pyre-fixme[2]: Parameter must be annotated.
 def _exc_handler(func):
     """
     Decorate an object method.
@@ -33,6 +35,9 @@ def _exc_handler(func):
     The "_handle_exception" method is assumed to exist.
     """
 
+    # pyre-fixme[53]: Captured variable `func` is not annotated.
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def wrapper(self, *args, **kwargs):
         try:
             func(self, *args, **kwargs)
@@ -82,6 +87,7 @@ class TestBase:
     def __init_subclass__(cls) -> None:
         if hasattr(cls, "__doc__") and cls.__doc__:
             # pyre-fixme[16]: Optional type has no attribute `rstrip`.
+            # pyre-fixme[4]: Attribute must be annotated.
             cls._doc = cls.__doc__.rstrip()
         else:
             cls._doc = ""
@@ -92,29 +98,45 @@ class TestBase:
     ) -> None:
         self.autoval_log = AutovalLog()
         self.result_handler = ResultHandler()
+        # pyre-fixme[4]: Attribute must be annotated.
         self.configchecker = None
+        # pyre-fixme[4]: Attribute must be annotated.
         self.test_name = type(self).__name__
+        # pyre-fixme[4]: Attribute must be annotated.
         self.test_start_time = time.time()
+        # pyre-fixme[4]: Attribute must be annotated.
         self.test_status = TestStatus.RUNNING
+        # pyre-fixme[4]: Attribute must be annotated.
         self.config = TEST_CONFIG
+        # pyre-fixme[4]: Attribute must be annotated.
         self.debug = TestArgs().debug
+        # pyre-fixme[4]: Attribute must be annotated.
         self.test_control = TEST_CONTROL
         self.is_teardown_called = False
         # These are set in Siteutils
+        # pyre-fixme[4]: Attribute must be annotated.
         self.system_log_dir = None
+        # pyre-fixme[4]: Attribute must be annotated.
         self.resultsdir = None
+        # pyre-fixme[4]: Attribute must be annotated.
         self.hosts = TEST_HOSTS
+        # pyre-fixme[4]: Attribute must be annotated.
         self.hostname = None
         if self.hosts and len(self.hosts) > 0:
             self.hostname = self.hosts[0].get("hostname", None)
 
+        # pyre-fixme[4]: Attribute must be annotated.
         self.connect_to_host = self.test_control.get("connect_to_host", True)
+        # pyre-fixme[4]: Attribute must be annotated.
         self.bg_monitor_args = self.test_control.get("bg_monitor", None)
 
         # Initializes the log directory, can't run any commands before this
         SiteUtils.init_logdirs_on_control_server(self)
+        # pyre-fixme[4]: Attribute must be annotated.
         self.host_objs = []
+        # pyre-fixme[4]: Attribute must be annotated.
         self.host = None
+        # pyre-fixme[4]: Attribute must be annotated.
         self.localhost = None
 
     def lifecycle(self) -> None:
@@ -209,6 +231,7 @@ class TestBase:
         except Exception as exception:
             self._handle_exception(exception)
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def on_fail(self, **kwargs) -> None:
         """
         Last step of the test lifecycle
@@ -229,6 +252,7 @@ class TestBase:
                     f"Encountered error during failure processing on host {host.hostname} ({exc})"
                 )
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def register_configchecker(self, custom_configchecker) -> None:
         """
         Register a custom config checker implementation
@@ -241,6 +265,7 @@ class TestBase:
         """
         self.configchecker = custom_configchecker
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def register_result_handler(self, custom_result_handler) -> None:
         """
         Register a custom result handler implementation
@@ -290,6 +315,7 @@ class TestBase:
         """Arbitrary pre-test actions taken on each host."""
         pass
 
+    # pyre-fixme[3]: Return type must be annotated.
     def setup(self, config_check: bool = True):
         """
         Constructs a test's environment.
@@ -331,6 +357,7 @@ class TestBase:
         if self.test_control.get("device_init"):
             self.device_init()
 
+    # pyre-fixme[3]: Return type must be annotated.
     def device_init(self):
         """prior-test device specific initialization(s) for emulator hosts"""
         for host in self.host_objs:
@@ -365,6 +392,7 @@ class TestBase:
         if not self.is_teardown_called:
             self.teardown()
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def _handle_exception(self, exception, re_raise=True) -> None:
         """
         This method handles all the user defined / python exceptions
@@ -396,6 +424,7 @@ class TestBase:
             raise
 
     @abc.abstractmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def execute(self):
         """
         This is an abstract method which has to be overridden by child test classes
@@ -404,6 +433,8 @@ class TestBase:
         """
         return
 
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def cleanup(self, cfg_filter=None, config_check: bool = True, config_data=None):
         """
         This is to maintain backwards compatibility with existing tests.
@@ -415,6 +446,7 @@ class TestBase:
         self.is_teardown_called = True
         self.teardown()
 
+    # pyre-fixme[3]: Return type must be annotated.
     def teardown(self):
         """
         This method is called at the end of the test.
@@ -433,6 +465,8 @@ class TestBase:
         finally:
             AutovalLog.log_debug("Post test operations completed")
 
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def get_test_results_file_path(self, file_name):
         """
         Returns the path for the test result files
@@ -448,6 +482,8 @@ class TestBase:
     def _save_results(self) -> None:
         self.result_handler.save_test_results()
 
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def __getattr__(self, name):
         # Allows to directly call methods on the test object that are defined
         # in AutovalUtils module, AutovalLog module
@@ -493,6 +529,7 @@ class TestBase:
         """
         pass
 
+    # pyre-fixme[3]: Return type must be annotated.
     def _set_final_test_status(self):
         """
         This computes and the final test status at the end of the test
@@ -512,5 +549,6 @@ class TestBase:
             if failed:
                 self.test_status = TestStatus.FAILED
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def add_measurement(self, name, value) -> None:
         autoval_output.add_measurement(name=name, value=value)

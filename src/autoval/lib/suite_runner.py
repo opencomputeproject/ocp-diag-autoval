@@ -18,13 +18,19 @@ from autoval.plugins.plugin_manager import PluginManager
 
 
 class SuiteRunner:
+    # pyre-fixme[2]: Parameter must be annotated.
     def __init__(self, autoval_cli, control_server_temp_dir) -> None:
+        # pyre-fixme[4]: Attribute must be annotated.
         self.autoval_cli = autoval_cli
+        # pyre-fixme[4]: Attribute must be annotated.
         self.suite_logs = self.create_suite_log_path()
         self.suite_results = {"pass": 0, "fail": 0}
+        # pyre-fixme[4]: Attribute must be annotated.
         self.configurator = self.autoval_cli.configurator
+        # pyre-fixme[4]: Attribute must be annotated.
         self.control_server_temp_dir = control_server_temp_dir
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def run_suite(self, suite_file) -> None:
         suite = self.get_test_suite(suite_file)
         self.suite_results = {"pass": 0, "fail": 0}
@@ -42,6 +48,7 @@ class SuiteRunner:
             )
         )
 
+    # pyre-fixme[3]: Return type must be annotated.
     def get_test_suite(self, suite_file: str):
         if not self.configurator:
             try:
@@ -59,6 +66,7 @@ class SuiteRunner:
                 Loader=yaml.FullLoader,
             )
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def run_test(self, test, args) -> bool:
         _test_start_time = time.time()
         _date = datetime.fromtimestamp(_test_start_time).strftime("%Y-%m-%d_%H-%M-%S")
@@ -128,11 +136,15 @@ class SuiteRunner:
         FileActions.mkdirs(dir_path)
         return dir_path
 
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def _get_test_log_file(self, test, _date):
         test_log = f"{test}.{_date}.DEBUG"
         test_log_path = os.path.join(test_log)
         return test_log_path
 
+    # pyre-fixme[24]: Generic type `dict` expects 2 type parameters, use
+    #  `typing.Dict[<key type>, <value type>]` to avoid runtime subscripting errors.
     def generate_test_control(self, args: Dict, log_dir: str) -> str:
         test_control = ""
         if args and args.get("test_params", False):
@@ -142,6 +154,8 @@ class SuiteRunner:
             )
         return test_control
 
+    # pyre-fixme[24]: Generic type `dict` expects 2 type parameters, use
+    #  `typing.Dict[<key type>, <value type>]` to avoid runtime subscripting errors.
     def generate_remote_cfg(self, remote_config: Dict) -> str:
         test_remote_cfg = os.path.join(remote_config["logdir"], "remote_cfg.json")
         FileActions.write_data(

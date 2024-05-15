@@ -40,11 +40,15 @@ class AutoValException(Exception):
     Base exception type with custom implementation for AutoVal
     """
 
+    # pyre-fixme[3]: Return type must be annotated.
     def __init__(
         self,
         message: Optional[str] = None,
+        # pyre-fixme[2]: Parameter must be annotated.
         component=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         error_type=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         identifier=None,
         exception: Optional[Exception] = None,
     ):
@@ -58,9 +62,13 @@ class AutoValException(Exception):
             error_type: Error type for this exception
             exception: Exception upon which this AutoValException is derived from
         """
+        # pyre-fixme[4]: Attribute must be annotated.
         self.message = None
+        # pyre-fixme[4]: Attribute must be annotated.
         self.component = None
+        # pyre-fixme[4]: Attribute must be annotated.
         self.error_type = None
+        # pyre-fixme[4]: Attribute must be annotated.
         self.identifier = None
         self.exception = exception
         if exception:
@@ -95,6 +103,7 @@ class AutoValException(Exception):
         return data
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def autoval_utils(cls):
         """
         imports and returns AutovalUtils class
@@ -108,8 +117,11 @@ class TestError(AutoValException):
     def __init__(
         self,
         message: str = "Test Error",
+        # pyre-fixme[2]: Parameter must be annotated.
         component=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         error_type=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         identifier=None,
         exception: Optional[Exception] = None,
     ) -> None:
@@ -131,10 +143,13 @@ class HostException(AutoValException):
     def __init__(
         self,
         message: str = "Host Error",
+        # pyre-fixme[2]: Parameter must be annotated.
         component=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         error_type=ErrorType.NOT_ACCESSIBLE_ERR,
     ) -> None:
         super().__init__(message=message, component=component, error_type=error_type)
+        # pyre-fixme[4]: Attribute must be annotated.
         self.message = AutoValException.truncate(message)
 
     def __str__(self) -> str:
@@ -146,11 +161,14 @@ class ConnectionError(AutoValException):
         self,
         identifier: str = "",
         message: str = "Connection Error",
+        # pyre-fixme[2]: Parameter must be annotated.
         component=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         error_type=ErrorType.NOT_ACCESSIBLE_ERR,
     ) -> None:
         message = f"{identifier}: {message}"
         super().__init__(message=message, component=component, error_type=error_type)
+        # pyre-fixme[4]: Attribute must be annotated.
         self.message = AutoValException.truncate(message)
 
     def __str__(self) -> str:
@@ -163,10 +181,13 @@ class TestInputError(AutoValException):
     def __init__(
         self,
         message: str = "Test Input Error",
+        # pyre-fixme[2]: Parameter must be annotated.
         component=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         error_type=ErrorType.INPUT_ERR,
     ) -> None:
         super().__init__(message=message, component=component, error_type=error_type)
+        # pyre-fixme[4]: Attribute must be annotated.
         self.message = AutoValException.truncate(message)
 
     def __str__(self) -> str:
@@ -177,9 +198,13 @@ class CmdError(AutoValException):
     def __init__(
         self,
         command: str,
+        # pyre-fixme[2]: Parameter must be annotated.
         result_obj,
+        # pyre-fixme[2]: Parameter must be annotated.
         additional_text=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         component=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         error_type=ErrorType.CMD_ERR,
     ) -> None:
         super().__init__(
@@ -188,7 +213,9 @@ class CmdError(AutoValException):
             error_type=error_type,
         )
         self.command = command
+        # pyre-fixme[4]: Attribute must be annotated.
         self.result_obj = result_obj
+        # pyre-fixme[4]: Attribute must be annotated.
         self.additional_text = AutoValException.truncate(additional_text)
 
     def __str__(self) -> str:
@@ -211,6 +238,7 @@ class ToolError(AutoValException):
     def __init__(
         self,
         message: str = "Tool Error",
+        # pyre-fixme[2]: Parameter must be annotated.
         component=None,
         error_type: Union[ErrorType, None] = None,
         exception: Optional[Exception] = None,
@@ -230,10 +258,13 @@ class TimeoutError(AutoValException):
     def __init__(
         self,
         message: str = "Timeout Error",
+        # pyre-fixme[2]: Parameter must be annotated.
         component=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         error_type=ErrorType.CMD_TIMEOUT_ERR,
     ) -> None:
         super().__init__(message=message, component=component, error_type=error_type)
+        # pyre-fixme[4]: Attribute must be annotated.
         self.message = AutoValException.truncate(message)
 
     def __str__(self) -> str:
@@ -244,10 +275,13 @@ class SystemInfoException(AutoValException):
     def __init__(
         self,
         message: str = "System Info Error",
+        # pyre-fixme[2]: Parameter must be annotated.
         component=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         error_type=None,
     ) -> None:
         super().__init__(message=message, component=component, error_type=error_type)
+        # pyre-fixme[4]: Attribute must be annotated.
         self.message = AutoValException.truncate(message)
 
     def __str__(self) -> str:
@@ -258,10 +292,13 @@ class AutovalFileError(AutoValException):
     def __init__(
         self,
         message: str = "Autoval File Error",
+        # pyre-fixme[2]: Parameter must be annotated.
         component=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         error_type=ErrorType.STORAGE_SERVICE_ERR,
     ) -> None:
         super().__init__(message=message, component=component, error_type=error_type)
+        # pyre-fixme[4]: Attribute must be annotated.
         self.message = AutoValException.truncate(message)
 
     def __str__(self) -> str:
@@ -271,7 +308,9 @@ class AutovalFileError(AutoValException):
 class AutovalFileNotFound(AutoValException):
     def __init__(self, message: str = "Autoval File Not Found Error") -> None:
         super().__init__()
+        # pyre-fixme[4]: Attribute must be annotated.
         self.message = AutoValException.truncate(message)
+        # pyre-fixme[4]: Attribute must be annotated.
         self.error_type = ErrorType.TEST_SCRIPT_ERR
 
     def __str__(self) -> str:
@@ -282,6 +321,7 @@ class CLIException(Exception):
     """Package object exceptions"""
 
     def __init__(self, message: str = "CLI Error") -> None:
+        # pyre-fixme[4]: Attribute must be annotated.
         self.message = AutoValException.truncate(message)
 
     def __str__(self) -> str:
@@ -291,7 +331,9 @@ class CLIException(Exception):
 class FolderTransferError(Exception):
     def __init__(
         self,
+        # pyre-fixme[2]: Parameter must be annotated.
         msg,
+        # pyre-fixme[2]: Parameter must be annotated.
         *args,
         code: FolderTransferErrorCodes = FolderTransferErrorCodes.UNKNOWN,
     ) -> None:
@@ -301,6 +343,7 @@ class FolderTransferError(Exception):
 
 class NotSupported(Exception):
     def __init__(self, message: str = "Action Not Supported") -> None:
+        # pyre-fixme[4]: Attribute must be annotated.
         self.message = AutoValException.truncate(message)
 
     def __str__(self) -> str:
@@ -313,6 +356,7 @@ class PasswordNotFound(Exception):
 
 class TestStepError(Exception):
     def __init__(self, message: str = "Test Step Error") -> None:
+        # pyre-fixme[4]: Attribute must be annotated.
         self.message = AutoValException.truncate(message)
 
     def __str__(self) -> str:
@@ -321,7 +365,9 @@ class TestStepError(Exception):
 
 class InvalidTestInputError(AutoValException):
     def __init__(self, message: str = "Invalid Test Input Error") -> None:
+        # pyre-fixme[4]: Attribute must be annotated.
         self.message = AutoValException.truncate(message)
+        # pyre-fixme[4]: Attribute must be annotated.
         self.error_type = ErrorType.INPUT_ERR
 
     def __str__(self) -> str:
@@ -334,10 +380,13 @@ class AMDSMIError(AutoValException):
     def __init__(
         self,
         message: str = "AMD-SMI Error",
+        # pyre-fixme[2]: Parameter must be annotated.
         component=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         error_type=None,
     ) -> None:
         super().__init__(message=message, component=component, error_type=error_type)
+        # pyre-fixme[4]: Attribute must be annotated.
         self.message = AutoValException.truncate(message)
 
     def __str__(self) -> str:

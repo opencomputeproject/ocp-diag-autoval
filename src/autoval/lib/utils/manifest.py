@@ -7,6 +7,7 @@ from autoval.plugins.plugin_manager import PluginManager
 
 
 class Manifest:
+    # pyre-fixme[3]: Return type must be annotated.
     def get_test_manifest(self):
         manifest = {
             "version": "<unknown>",
@@ -45,6 +46,7 @@ class Manifest:
 
         return manifest
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def _get_time_str(self, epoch) -> str:
         datetime_str = datetime.datetime.fromtimestamp(int(epoch)).strftime("%c")
         return datetime_str

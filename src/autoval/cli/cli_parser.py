@@ -20,8 +20,10 @@ class AutoValCLI:
     ) -> None:
 
         self.description = "AutoVal CLI"
+        # pyre-fixme[4]: Attribute must be annotated.
         self.parser = None
         if cli_args_prefilled is not None:
+            # pyre-fixme[4]: Attribute must be annotated.
             self.args = cli_args_prefilled
         else:
             self.args = self.parse_cli()
@@ -29,16 +31,27 @@ class AutoValCLI:
         if parse_only_args:
             return
 
+        # pyre-fixme[4]: Attribute must be annotated.
         self.func_name = self.args.function_name
+        # pyre-fixme[4]: Attribute must be annotated.
         self.func_args = self.args.func_args
+        # pyre-fixme[4]: Attribute must be annotated.
         self.test_class = self.args.test_class
+        # pyre-fixme[4]: Attribute must be annotated.
         self.debug = self.args.debug
+        # pyre-fixme[4]: Attribute must be annotated.
         self.test_module = self.args.module
+        # pyre-fixme[4]: Attribute must be annotated.
         self.suite = self.args.suite
+        # pyre-fixme[4]: Attribute must be annotated.
         self.dry_run = self.args.dry_run
+        # pyre-fixme[4]: Attribute must be annotated.
         self.run_local_code = self.args.run_local_code
+        # pyre-fixme[4]: Attribute must be annotated.
         self.config = None
+        # pyre-fixme[4]: Attribute must be annotated.
         self.save_console_log = self.args.save_console_log
+        # pyre-fixme[4]: Attribute must be annotated.
         self.test_control = {}
         if all([self.suite, self.test_module]):
             raise CLIException("Specify either suite or module")
@@ -65,6 +78,7 @@ class AutoValCLI:
         args = parser.parse_known_args()[0]
         return args
 
+    # pyre-fixme[3]: Return type must be annotated.
     def initialize_args(self):
         self.test_control = self._initialize_test_control()
         self.config = self._initialize_config()
@@ -158,6 +172,7 @@ class AutoValCLI:
 
         return self.parser
 
+    # pyre-fixme[3]: Return type must be annotated.
     def _initialize_config(self):
         config = None
         if self.args.config:
@@ -169,12 +184,15 @@ class AutoValCLI:
                 )
         return config
 
+    # pyre-fixme[3]: Return type must be annotated.
     def _initialize_test_control(self):
         test_control = {}
         if self.args.test_control:
             test_control = self._read_file(file_path=self.args.test_control)
 
         if self.args.cli_args:
+            # pyre-fixme[16]: Item `str` of `Union[Dict[typing.Any, typing.Any],
+            #  str]` has no attribute `update`.
             test_control.update(self.parse_cli_args(self.args.cli_args))
 
         return test_control
@@ -196,6 +214,7 @@ class AutoValCLI:
 
         return _file
 
+    # pyre-fixme[3]: Return type must be annotated.
     def _read_json_file(self, control_path: str):
         from autoval.lib.utils.file_actions import FileActions
 
@@ -206,6 +225,8 @@ class AutoValCLI:
 
         return FileActions.write_data(control_path, data)
 
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def parse_cli_args(self, cli_args):
         # User can overwrite test_control settings through --args parameter.
         # Data can be either provided in json structure matching the

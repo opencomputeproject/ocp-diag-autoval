@@ -29,6 +29,7 @@ class ConnectionAbstract(abc.ABC):
         connection_timeout: int = 60,
         background: bool = False,
         keepalive: int = 0,
+        # pyre-fixme[2]: Parameter must be annotated.
         forward_ssh_agent=False,
         path_env: Optional[List[str]] = None,
     ) -> str:
@@ -73,14 +74,20 @@ class ConnectionAbstract(abc.ABC):
         pass
 
     @abc.abstractmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def read_file(self, file_path, **kwargs):
         return
 
     @abc.abstractmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def get_file(self, file_path, target, **kwargs):
         return
 
     @abc.abstractmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def put_file(self, file_path, target, **kwargs):
         return
 
@@ -91,9 +98,11 @@ class ConnectionAbstract(abc.ABC):
         return
 
     @abc.abstractmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def _connect(self):
         return
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def _log_cmd_metrics(self, cmd, start_time, duration, status, output) -> None:
         self.result_handler.add_cmd_metric(
             cmd, start_time, duration, status, output, self.hostname
@@ -101,7 +110,9 @@ class ConnectionAbstract(abc.ABC):
 
     def get_folder(
         self,
+        # pyre-fixme[2]: Parameter must be annotated.
         file_path,
+        # pyre-fixme[2]: Parameter must be annotated.
         target,
         create: bool = True,
         overwrite: bool = True,
@@ -130,7 +141,9 @@ class ConnectionAbstract(abc.ABC):
 
     def put_folder(
         self,
+        # pyre-fixme[2]: Parameter must be annotated.
         file_path,
+        # pyre-fixme[2]: Parameter must be annotated.
         target,
         create: bool = True,
         overwrite: bool = True,
@@ -183,6 +196,7 @@ class ConnectionAbstract(abc.ABC):
         out = self.run(cmd)
         return out
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def has_rebooted(self, prev_reboot_time, new_reboot_time) -> bool:
         if abs(int(prev_reboot_time) - int(new_reboot_time)) > 5:
             return True
@@ -193,6 +207,7 @@ class ConnectionAbstract(abc.ABC):
     def wait_for_reconnect(self, timeout: float = 1200) -> None:
         self.reconnect(timeout=10)
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def _is_system_booted(self, start_time, shutdown_timeout) -> None:
         system_down = False
         count = 0
@@ -215,9 +230,12 @@ class ConnectionAbstract(abc.ABC):
             )
 
     @property
+    # pyre-fixme[3]: Return type must be annotated.
     def hostname(self):
+        # pyre-fixme[16]: `ConnectionAbstract` has no attribute `_hostname`.
         return self._hostname
 
     @hostname.setter
+    # pyre-fixme[2]: Parameter must be annotated.
     def hostname(self, value):
         self._hostname = value

@@ -19,11 +19,15 @@ from autoval.lib.utils.site_utils import SiteUtils
 class PluginManager:
     """class for Plugin manager"""
 
+    # pyre-fixme[4]: Attribute must be annotated.
     PLUGIN_CONFIG_PATH = SiteUtils.get_plugin_config_path()
     # _plugin_map is populated on the first call to get_plugin_cls
+    # pyre-fixme[4]: Attribute must be annotated.
     _plugin_map = {}
 
     @staticmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def get_plugin_cls(plugin_name):
         """Get a class reference for the requested plugin"""
         if not PluginManager._plugin_map.get(plugin_name, None):
@@ -31,6 +35,8 @@ class PluginManager:
         return PluginManager._plugin_map.get(plugin_name)
 
     @staticmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def load_class(module: str, class_str):
         """Import specified plugin module"""
         try:
@@ -42,6 +48,7 @@ class PluginManager:
             raise ex
 
     @classmethod
+    # pyre-fixme[2]: Parameter must be annotated.
     def load_plugins(cls, plugin_config_path=None, plugin_name=None) -> None:
         """
         Load plugins from plugin config json file and updates the plugins to plugin dictionary
@@ -80,6 +87,8 @@ class PluginManager:
             AutovalLog.log_debug(f"Plugin {plugin_name} not found")
 
     @classmethod
+    # pyre-fixme[24]: Generic type `dict` expects 2 type parameters, use
+    #  `typing.Dict[<key type>, <value type>]` to avoid runtime subscripting errors.
     def _read_resource_file(cls, file_path: str, module: str = "autoval") -> Dict:
         absolute_file_path = pkg_resources.resource_filename(module, file_path)
         if os.path.exists(absolute_file_path):

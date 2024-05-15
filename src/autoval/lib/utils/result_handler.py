@@ -11,17 +11,27 @@ from autoval.lib.utils.manifest import Manifest
 
 
 class ResultHandler:
+    # pyre-fixme[4]: Attribute must be annotated.
     test_results = {}  # referenced by file_actions so can't remove
+    # pyre-fixme[4]: Attribute must be annotated.
     cmd_metrics = []  # referenced by test_autoval_log so can't remove
+    # pyre-fixme[4]: Attribute must be annotated.
     test_steps = []
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def __init__(self, test=None) -> None:
+        # pyre-fixme[4]: Attribute must be annotated.
         self.test = test
         self.results_dir = ""
+        # pyre-fixme[4]: Attribute must be annotated.
         self.test_summary = {}
+        # pyre-fixme[4]: Attribute must be annotated.
         self.failed_steps = None
+        # pyre-fixme[4]: Attribute must be annotated.
         self.warning_steps = None
+        # pyre-fixme[4]: Attribute must be annotated.
         self.passed_steps = None
+        # pyre-fixme[4]: Attribute must be annotated.
         self.test_params = None
 
     def add_results_dir(self, dir: str) -> None:
@@ -32,6 +42,8 @@ class ResultHandler:
         """
         self.results_dir = dir
 
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def _get_test_results_file_path(self, file_name):
         file_path = os.path.join(self.results_dir, "%s" % file_name)
         return file_path
@@ -80,6 +92,7 @@ class ResultHandler:
             )
         )
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def add_test_results(self, results) -> None:
         """
         Updates the self.test_results dictionary with additional
@@ -90,6 +103,8 @@ class ResultHandler:
         str_results = json.dumps(results)
         autoval_output.add_measurement("test-results", str_results)
 
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def add_test_summary_results(self, results):
         """
         Updates the self.test_summary dictionary with additional
@@ -98,6 +113,7 @@ class ResultHandler:
         """
         self.test_summary.update(results)
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def update_test_results(self, results) -> None:
         """
         Updates the self.test_results dictionary with additional
@@ -114,6 +130,8 @@ class ResultHandler:
                     self.test_results[key] = {}
                 self.test_results[key].update(value)
 
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def update_test_summary_results(self, results):
         """
         Updates the self.test_summary dictionary with additional
@@ -130,6 +148,7 @@ class ResultHandler:
                     self.test_summary[key] = {}
                 self.test_summary[key].update(value)
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def add_test_step(self, step_data) -> None:
         self.test_steps.append(step_data)
 
@@ -143,6 +162,8 @@ class ResultHandler:
             self.test_results = GenericUtils.convert_to_ascii(self.test_results)
             self._save_json(self.test_results, file_path)
 
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def save_test_summary_results(self, file_path):
         """
         Saves everything that was added using 'add_test_summary_results' in a JSON
@@ -194,6 +215,7 @@ class ResultHandler:
         FileActions.write_data(file_path, data)
 
     @classmethod
+    # pyre-fixme[2]: Parameter must be annotated.
     def _save_lab_json(cls, data, file_path) -> None:
         """
         Storing the lab outputs without sorting into the
@@ -207,11 +229,17 @@ class ResultHandler:
     @classmethod
     def add_cmd_metric(
         cls,
+        # pyre-fixme[2]: Parameter must be annotated.
         cmd,
+        # pyre-fixme[2]: Parameter must be annotated.
         start_time,
+        # pyre-fixme[2]: Parameter must be annotated.
         duration,
+        # pyre-fixme[2]: Parameter must be annotated.
         exit_code,
+        # pyre-fixme[2]: Parameter must be annotated.
         output,
+        # pyre-fixme[2]: Parameter must be annotated.
         hostname=None,
     ) -> None:
         """
@@ -242,6 +270,7 @@ class ResultHandler:
         cls.cmd_metrics.append(cmd_dict)
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def get_cmd_metrics(cls):
         """
         Deprecated class method
@@ -259,8 +288,15 @@ class ResultHandler:
             cls._save_json(cls.cmd_metrics, file_path)
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def save_result_threshold_data(
-        cls, raw_result=None, metric_result=None, metric_threshold=None
+        cls,
+        # pyre-fixme[2]: Parameter must be annotated.
+        raw_result=None,
+        # pyre-fixme[2]: Parameter must be annotated.
+        metric_result=None,
+        # pyre-fixme[2]: Parameter must be annotated.
+        metric_threshold=None,
     ):
 
         thresholds = {}

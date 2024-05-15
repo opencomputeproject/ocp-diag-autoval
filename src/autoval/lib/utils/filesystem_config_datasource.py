@@ -11,6 +11,7 @@ Place holder for Hi5 Plugin
 
 
 class FileSystemConfigDataSource(ConfigDataSource):
+    # pyre-fixme[3]: Return type must be annotated.
     def read_config_as_string(self, filepath: str):
         """
         Reads packaged config from configerator
@@ -24,6 +25,7 @@ class FileSystemConfigDataSource(ConfigDataSource):
         )
         return json.dumps(threshold_data)
 
+    # pyre-fixme[3]: Return type must be annotated.
     def read_config_as_json(self, filepath: str):
         """
         Reads packaged config from configerator

@@ -9,6 +9,7 @@ from autoval.plugins.plugin_manager import PluginManager
 
 class ConnectionFactory:
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def _parse_connection_arg(cls):
         parser = argparse.ArgumentParser(description="connection arg")
         parser.add_argument(
@@ -23,17 +24,22 @@ class ConnectionFactory:
         return args.thrift
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def create(
         cls,
+        # pyre-fixme[2]: Parameter must be annotated.
         hostname,
         force_ssh: bool = False,
         skip_health_check: bool = False,
+        # pyre-fixme[2]: Parameter must be annotated.
         user=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         password=None,
         allow_agent: bool = True,
         force_thrift: bool = False,
         local_mode: bool = False,
         sudo: bool = False,
+        # pyre-fixme[2]: Parameter must be annotated.
         port=None,
     ):
         if force_thrift:
@@ -59,17 +65,28 @@ class ConnectionFactory:
         return obj
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def _get_object(
         cls,
+        # pyre-fixme[2]: Parameter must be annotated.
         hostname,
+        # pyre-fixme[2]: Parameter must be annotated.
         force_ssh,
+        # pyre-fixme[2]: Parameter must be annotated.
         skip_health_check,
+        # pyre-fixme[2]: Parameter must be annotated.
         user,
+        # pyre-fixme[2]: Parameter must be annotated.
         password,
+        # pyre-fixme[2]: Parameter must be annotated.
         allow_agent,
+        # pyre-fixme[2]: Parameter must be annotated.
         force_thrift,
+        # pyre-fixme[2]: Parameter must be annotated.
         local_mode,
+        # pyre-fixme[2]: Parameter must be annotated.
         sudo,
+        # pyre-fixme[2]: Parameter must be annotated.
         port,
     ):
         if local_mode:
@@ -77,6 +94,7 @@ class ConnectionFactory:
 
         if force_ssh:
             use_thrift = False
+        # pyre-fixme[16]: `ConnectionFactory` has no attribute `thrift`.
         elif cls.thrift or force_thrift:
             use_thrift = True
         else:
@@ -96,10 +114,14 @@ class ConnectionFactory:
         )
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def validate(
         cls,
+        # pyre-fixme[2]: Parameter must be annotated.
         hostname,
+        # pyre-fixme[2]: Parameter must be annotated.
         user=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         password=None,
         allow_agent: bool = False,
     ):

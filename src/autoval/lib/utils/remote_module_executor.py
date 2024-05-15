@@ -9,6 +9,8 @@ SITE_SETTINGS = "SITE_SETTINGS"
 
 class RemoteModuleExecutor:
     @staticmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def run_remote_module(module, method, params, class_name, timeout, host):
         base = "/usr/facebook/"
         module_runner = "autoval.lib.utils.autoval_module_runner"

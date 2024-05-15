@@ -29,9 +29,14 @@ class UperfTestUtil:
 
     def get_performance_data(
         self,
+        # pyre-fixme[24]: Generic type `dict` expects 2 type parameters, use
+        #  `typing.Dict[<key type>, <value type>]` to avoid runtime subscripting
+        #  errors.
         config_dict: Dict,
         number_of_recs: int = 10,
         db_type: Optional[str] = None,
+        # pyre-fixme[24]: Generic type `dict` expects 2 type parameters, use
+        #  `typing.Dict[<key type>, <value type>]` to avoid runtime subscripting errors.
     ) -> List[Dict]:
         """
         Get the right plugin for the user environment and queries the
@@ -52,6 +57,8 @@ class UperfTestUtil:
             AutovalLog.log_info(f"Unable to perform read with following error {e}")
             return []
 
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def get_config_for_perf_compare(self, host):
         return self.get_data_plugin().get_config_for_perf_compare(host)
 
@@ -66,6 +73,7 @@ class UperfTestUtil:
         except Exception as e:
             AutovalLog.log_info(f"Unable to perform write with following error  {e}")
 
+    # pyre-fixme[3]: Return type must be annotated.
     def get_data_plugin(self, db_type: Optional[str] = None):
         """
         provides active plugin to which the data needs to be written,
@@ -90,6 +98,8 @@ class UperfTestUtil:
             plugin_module = importlib.import_module(plugin, ".")
             return plugin_module
 
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def update_config_dict(self, config_dict, conf_file: str):
         try:
             current_config_data = FileActions.read_data(conf_file, json_file=True)
@@ -110,31 +120,43 @@ class FormulaException(Exception):
 
 
 class Threshold:
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def __init__(self, threshold):
         if threshold:
             for k, v in threshold.items():
                 setattr(self, k, v)
 
+    # pyre-fixme[3]: Return type must be annotated.
     def __iter__(self):
         for k, v in self.__dict__.items():
             yield k, v
 
 
 class ThresholdConfig:
+    # pyre-fixme[3]: Return type must be annotated.
     def __init__(self):
+        # pyre-fixme[4]: Attribute must be annotated.
         self.formula_map = {
             "multiply_with_cpu_speed": self.multiply_with_cpu_speed,
             "multiply_with_cpu_threads": self.multiply_with_cpu_threads,
             "multiply_with_theoretical_total_bw": self.multiply_with_theoretical_total_bw,
         }
 
+    # pyre-fixme[3]: Return type must be annotated.
     def get_threshold(
         self,
+        # pyre-fixme[2]: Parameter must be annotated.
         filepath,
+        # pyre-fixme[2]: Parameter must be annotated.
         user_criteria,
+        # pyre-fixme[2]: Parameter must be annotated.
         user_metric_list,
+        # pyre-fixme[2]: Parameter must be annotated.
         return_partial_matches=False,
+        # pyre-fixme[2]: Parameter must be annotated.
         must_match_criteria=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         formula_args=None,
     ):
         """
@@ -194,9 +216,12 @@ class ThresholdConfig:
 
         return thresholds
 
+    # pyre-fixme[3]: Return type must be annotated.
     def choose_relevant_rules_for_metric(
         self,
+        # pyre-fixme[2]: Parameter must be annotated.
         rules,
+        # pyre-fixme[2]: Parameter must be annotated.
         metric,
     ):
         selected_rules = []
@@ -208,13 +233,20 @@ class ThresholdConfig:
 
         return selected_rules
 
+    # pyre-fixme[3]: Return type must be annotated.
     def get_a_match_for_metric(
         self,
+        # pyre-fixme[2]: Parameter must be annotated.
         metric,
+        # pyre-fixme[2]: Parameter must be annotated.
         rules,
+        # pyre-fixme[2]: Parameter must be annotated.
         user_criteria,
+        # pyre-fixme[2]: Parameter must be annotated.
         formula_args,
+        # pyre-fixme[2]: Parameter must be annotated.
         must_match_criteria,
+        # pyre-fixme[2]: Parameter must be annotated.
         return_partial_matches,
     ):
         """
@@ -308,6 +340,7 @@ class ThresholdConfig:
 
         if partially_matched_thresholds:
             if len(partially_matched_thresholds) > 1:
+                # pyre-fixme[20]: Argument `must_match_criteria` expected.
                 metric_threshold = self.vote_a_threshold(partially_matched_thresholds)
 
                 if metric_threshold:
@@ -325,13 +358,17 @@ class ThresholdConfig:
                 f"No thresholds matches with the user criteria for {metric}"
             )
 
+    # pyre-fixme[3]: Return type must be annotated.
     def vote_a_threshold(
         self,
+        # pyre-fixme[2]: Parameter must be annotated.
         partially_matched_thresholds,
+        # pyre-fixme[2]: Parameter must be annotated.
         must_match_criteria,
     ):
         if must_match_criteria:
             for partial_match in partially_matched_thresholds:
+                # pyre-fixme[16]: `Set` has no attribute `isubset`.
                 if set(must_match_criteria).isubset(
                     partial_match.matched_criterias.keys()
                 ):
@@ -344,14 +381,21 @@ class ThresholdConfig:
             )
             voted_rule = partially_matched_thresholds[0]
 
+        # pyre-fixme[61]: `voted_rule` is undefined, or not always defined.
         return voted_rule
 
+    # pyre-fixme[3]: Return type must be annotated.
     def store_a_match_as_threshold(
         self,
+        # pyre-fixme[2]: Parameter must be annotated.
         metric,
+        # pyre-fixme[2]: Parameter must be annotated.
         matches,
+        # pyre-fixme[2]: Parameter must be annotated.
         rule,
+        # pyre-fixme[2]: Parameter must be annotated.
         user_criteria,
+        # pyre-fixme[2]: Parameter must be annotated.
         match_type,
     ):
         _metric_threshold = {}
@@ -365,10 +409,17 @@ class ThresholdConfig:
         return Threshold(_metric_threshold)
 
     def evaluate_formula_expression(
-        self, formula: str, formula_args: Dict
+        self,
+        formula: str,
+        # pyre-fixme[24]: Generic type `dict` expects 2 type parameters, use
+        #  `typing.Dict[<key type>, <value type>]` to avoid runtime subscripting
+        #  errors.
+        formula_args: Dict,
     ) -> Union[int, float]:
         return GenericUtils.evaluate_expression(formula, formula_args)
 
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def _apply_formula(self, threshold, formula_args):
         if not threshold.formula:
             print("This threshold does not have a formula")
@@ -382,6 +433,8 @@ class ThresholdConfig:
 
         return threshold
 
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def is_match(self, key, value, rule_criteria):
         if key in rule_criteria:
             if rule_criteria[key] == value:
@@ -402,6 +455,8 @@ class ThresholdConfig:
 
         return False, None
 
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def convert_project_name_to_model_ids(self, project_name_list):
         model_ids = []
         project_serf_names = []
@@ -429,16 +484,22 @@ class ThresholdConfig:
                     )
         return model_ids
 
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def multiply_with_cpu_speed(self, value, formula_args):
         if "cpu_speed" in formula_args:
             return value * formula_args["cpu_speed"]
         raise FormulaException("Missing value for cpu_speed")
 
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def multiply_with_cpu_threads(self, value, formula_args):
         if "cpu_threads" in formula_args:
             return value * formula_args["cpu_threads"]
         raise FormulaException("Missing value for cpu_threads")
 
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def multiply_with_theoretical_total_bw(self, value, formula_args):
         if "theoretical_total_bw" in formula_args:
             return value * formula_args["theoretical_total_bw"]

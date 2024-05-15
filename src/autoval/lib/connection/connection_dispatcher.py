@@ -6,29 +6,40 @@ from autoval.lib.host.credentials import Credentials
 
 
 class ConnectionDispatcher:
+    # pyre-fixme[2]: Parameter must be annotated.
     def __init__(self, host, skip_health_check: bool = False) -> None:
+        # pyre-fixme[4]: Attribute must be annotated.
         self.host_dict = host
         self.skip_health_check = skip_health_check
+        # pyre-fixme[4]: Attribute must be annotated.
         self.hostname = self.host_dict.get("hostname", None)
         self._oob_addr = ""
+        # pyre-fixme[4]: Attribute must be annotated.
         self._host_port = None
         self.oob_only = True if not self.hostname else False
+        # pyre-fixme[4]: Attribute must be annotated.
         self._host_connection = None
+        # pyre-fixme[4]: Attribute must be annotated.
         self._bmc_connections = []
+        # pyre-fixme[4]: Attribute must be annotated.
         self._localhost = None
+        # pyre-fixme[4]: Attribute must be annotated.
         self.rack_sub_position_slot = host.get("rack_sub_position_slot", None)
 
     @property
+    # pyre-fixme[3]: Return type must be annotated.
     def oob_addr(self):
         if self.bmc_connections[0] and not self._oob_addr:
             self._oob_addr = self.bmc_connections[0].hostname
         return self._oob_addr
 
     @property
+    # pyre-fixme[3]: Return type must be annotated.
     def host_port(self):
         return self._host_port
 
     @property
+    # pyre-fixme[3]: Return type must be annotated.
     def host_connection(self):
         if not self._host_connection:
             password = self.host_dict.get("password", None)
@@ -46,11 +57,13 @@ class ConnectionDispatcher:
         return self._host_connection
 
     @property
+    # pyre-fixme[3]: Return type must be annotated.
     def bmc_connections(self):
         if not self._bmc_connections:
             self._bmc_connections.extend(self._get_oob_connections())
         return self._bmc_connections
 
+    # pyre-fixme[3]: Return type must be annotated.
     def _get_oob_connections(self):
         """Constructing additional BMCs connection objects"""
         bmc_connections = []
@@ -81,6 +94,7 @@ class ConnectionDispatcher:
         return bmc_connections
 
     @property
+    # pyre-fixme[3]: Return type must be annotated.
     def localhost(self):
         if not self._localhost:
             self._localhost = ConnectionFactory.create("localhost", local_mode=True)

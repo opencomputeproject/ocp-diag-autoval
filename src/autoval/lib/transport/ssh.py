@@ -36,13 +36,21 @@ class SSHResult:
     """
 
     def __init__(
-        self, return_code, stdout: str = "", stderr: str = "", timed_out: bool = False
+        self,
+        # pyre-fixme[2]: Parameter must be annotated.
+        return_code,
+        stdout: str = "",
+        stderr: str = "",
+        timed_out: bool = False,
     ) -> None:
 
+        # pyre-fixme[4]: Attribute must be annotated.
         self.return_code = return_code
 
+        # pyre-fixme[4]: Attribute must be annotated.
         self.stdout = ConnectionUtils.str_encode(stdout)
 
+        # pyre-fixme[4]: Attribute must be annotated.
         self.stderr = ConnectionUtils.str_encode(stderr)
 
         self.timed_out = timed_out
@@ -53,8 +61,11 @@ class SSH:
 
     def __init__(
         self,
+        # pyre-fixme[2]: Parameter must be annotated.
         host,
+        # pyre-fixme[2]: Parameter must be annotated.
         user=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         password=None,
         port: int = 22,
         connection_timeout: int = 60,
@@ -66,10 +77,14 @@ class SSH:
         if not SSH.paramiko_logger_initialized:
             AutovalLog.init_paramiko_logger()
             SSH.paramiko_logger_initialized = True
+        # pyre-fixme[4]: Attribute must be annotated.
         self._host = host
+        # pyre-fixme[4]: Attribute must be annotated.
         self._user = user
+        # pyre-fixme[4]: Attribute must be annotated.
         self._password = password
         self._port = port
+        # pyre-fixme[4]: Attribute must be annotated.
         self._ssh_key_path = SiteUtils().get_ssh_key_path()
         self._connection_timeout = connection_timeout
         self._allow_agent = allow_agent
@@ -81,8 +96,10 @@ class SSH:
                     self._ssh_key_path.remove(ssh_cert_file)
 
     @retry(tries=3, sleep_seconds=30)
+    # pyre-fixme[3]: Return type must be annotated.
     def _connect_to_host(self):
         try:
+            # pyre-fixme[16]: `SSH` has no attribute `_ssh`.
             self._ssh = paramiko.SSHClient()
             self._ssh.load_system_host_keys()
             self._ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -97,6 +114,7 @@ class SSH:
                 allow_agent=self._allow_agent,
             )
             if self.keepalive != 0:
+                # pyre-fixme[16]: `SSHClient` has no attribute `_transport`.
                 self._ssh._transport.set_keepalive(self.keepalive)
 
         except paramiko.ssh_exception.AuthenticationException:
@@ -106,6 +124,7 @@ class SSH:
                 error_type=ErrorType.NOT_ACCESSIBLE_ERR,
             )
 
+        # pyre-fixme[16]: Module `paramiko` has no attribute `BadHostKeyException`.
         except paramiko.BadHostKeyException:
             # removing old host key and retry
             LocalConn(self._host).run("ssh-keygen -R %s" % self._host)
@@ -127,10 +146,12 @@ class SSH:
         self._connect_to_host()
         return self
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def __exit__(self, exc_type, exc_val, exc_tb) -> None:
         # Used for "with"-style connections
         self._disconnect()
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def raise_timeout(self, cmd, timeout, queue) -> None:
         queue.put("SSH command [%s] timed out after [%d] seconds" % (cmd, timeout))
         self._disconnect()
@@ -143,14 +164,18 @@ class SSHCommand:
 
     def __init__(
         self,
+        # pyre-fixme[2]: Parameter must be annotated.
         ssh,
+        # pyre-fixme[2]: Parameter must be annotated.
         cmd,
         timeout: int = 600,
         get_pty: bool = False,
         path_env: Optional[List[str]] = None,
     ) -> None:
         self._timeout = timeout
+        # pyre-fixme[4]: Attribute must be annotated.
         self.ssh = ssh
+        # pyre-fixme[4]: Attribute must be annotated.
         self._cmd = "".join(cmd)
         self.get_pty = get_pty
         self.path_env = path_env
@@ -183,9 +208,11 @@ class SSHCommand:
 
         return SSHResult(return_code, stdout=stdout, stderr=stderr)
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def __exit__(self, exc_type, exc_val, exc_tb) -> None:
         return
 
+    # pyre-fixme[3]: Return type must be annotated.
     def _exec(self):
         (stdin, stdout, stderr) = self.ssh._ssh.exec_command(
             self._cmd,
@@ -214,11 +241,19 @@ class SSHCommand:
             sel_res = sel.select()
             readq = [v[0].fileobj for v in sel_res if v]
             for c in readq:
+                # pyre-fixme[16]: Item `HasFileno` of `Union[HasFileno, int]` has no
+                #  attribute `recv_ready`.
                 if c.recv_ready():
+                    # pyre-fixme[16]: Item `HasFileno` of `Union[HasFileno, int]`
+                    #  has no attribute `in_buffer`.
                     stdout_chunks.append(channel.recv(len(c.in_buffer)))
                     got_chunk = True
+                # pyre-fixme[16]: Item `HasFileno` of `Union[HasFileno, int]` has no
+                #  attribute `recv_stderr_ready`.
                 if c.recv_stderr_ready():
                     # make sure to read stderr to prevent stall
+                    # pyre-fixme[16]: Item `HasFileno` of `Union[HasFileno, int]`
+                    #  has no attribute `in_stderr_buffer`.
                     stderr_chunks.append(channel.recv_stderr(len(c.in_stderr_buffer)))
                     got_chunk = True
             if (
@@ -252,23 +287,31 @@ class SSHConn(ConnectionAbstract):
 
     def __init__(
         self,
+        # pyre-fixme[2]: Parameter must be annotated.
         host,
         skip_health_check: bool = False,
+        # pyre-fixme[2]: Parameter must be annotated.
         user=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         password=None,
         allow_agent: bool = True,
         sudo: bool = False,
     ) -> None:
+        # pyre-fixme[4]: Attribute must be annotated.
         self.hostname = host
         self.port = 22
+        # pyre-fixme[4]: Attribute must be annotated.
         self.user = user
+        # pyre-fixme[4]: Attribute must be annotated.
         self.password = password
         self.allow_agent = allow_agent
         self.sudo = sudo
         self._connect(skip_health_check)
+        # pyre-fixme[4]: Attribute must be annotated.
         self._is_root = None
 
     @property
+    # pyre-fixme[3]: Return type must be annotated.
     def is_root(self):
         if self._is_root is None:
             if self.user == "root":
@@ -369,6 +412,7 @@ class SSHConn(ConnectionAbstract):
                     duration,
                 )
 
+    # pyre-fixme[3]: Return type must be annotated.
     def ssh_connect(self):
         # Establishes connection to the host
 
@@ -376,6 +420,8 @@ class SSHConn(ConnectionAbstract):
             connect_status = ssh._connect_to_host()
         return connect_status
 
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def read_file(self, file_path, decode_ascii: bool = False, **kwargs):
         # Reads file_path and returns its contents as string
 
@@ -392,6 +438,7 @@ class SSHConn(ConnectionAbstract):
                 raise Exception("Failed to read file %s: %s" % (file_path, str(e)))
         return content
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def get_file(self, file_path, target, **kwargs) -> None:
         # Copies file_path from remote system to target on local system
 
@@ -403,6 +450,7 @@ class SSHConn(ConnectionAbstract):
             except Exception as e:
                 raise Exception("Failed to get file %s: %s" % (file_path, str(e)))
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def put_file(self, file_path, target, **kwargs) -> None:
         """Transfers local file to remote host over ssh.
         Args:
@@ -497,6 +545,7 @@ class SSHConn(ConnectionAbstract):
         except Exception as e:
             raise Exception("Failed to scp file %s: %s" % (file_tocopy, str(e)))
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def rsync_file(self, src, dst, quick=None) -> None:
         target = self.hostname
         cmd0 = ""
@@ -524,11 +573,14 @@ class SSHConn(ConnectionAbstract):
     pubkey_auth: Bool PubkeyAuthentication for sshpass connection.
     """
 
+    # pyre-fixme[3]: Return type must be annotated.
     def sshpass_run_get_output(
         self,
         cmd: str,
         hostname: str,
+        # pyre-fixme[2]: Parameter must be annotated.
         user=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         password=None,
         pubkey_auth: bool = False,
         timeout: int = 600,
@@ -550,10 +602,15 @@ class SSHAgent:
     Call SSHAgentForwardRequest to forward the agent to the provided channel session
     """
 
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def __init__(self, ssh, forward_ssh_agent: bool = False):
         self.forward_ssh_agent = forward_ssh_agent
+        # pyre-fixme[4]: Attribute must be annotated.
         self.ssh = ssh
         self._ssh_agent_pid: str = ""
+        # pyre-fixme[24]: Generic type `list` expects 1 type parameter, use
+        #  `typing.List[<element type>]` to avoid runtime subscripting errors.
         self.id_rsa_path: list = SiteUtils().get_ssh_key_path()
         self._ssh_auth_sock: str = ""
         self.agent_forward_req: Optional[SSHAgentForwardRequest] = None
@@ -602,6 +659,7 @@ class SSHAgent:
             AutovalLog.log_info("SSH Agent invoked and cert forwarded")
         return self
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def __exit__(self, exc_type, exc_val, exc_tb) -> None:
         if not self.forward_ssh_agent:
             return
@@ -619,11 +677,14 @@ class AgentConnectionHandler(AgentClientProxy):
     socket on provided agent path.
     """
 
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def __init__(self, chanRemote, agent_file_path: str):
         self.agent_file_path = agent_file_path
         super().__init__(chanRemote)
 
     # @override
+    # pyre-fixme[3]: Return type must be annotated.
     def connect(self):
         """
         Method automatically called by ``AgentProxyThread.run``.
@@ -631,6 +692,7 @@ class AgentConnectionHandler(AgentClientProxy):
         conn = self.get_agent_connection()
         if not conn:
             return
+        # pyre-fixme[16]: `AgentConnectionHandler` has no attribute `_conn`.
         self._conn = conn
 
     def get_agent_connection(self) -> socket.socket:
@@ -652,21 +714,28 @@ class SSHAgentForwardRequest:
     Rewrite AgentRequestHandler to forward ssh agent to provided open ssh channel
     """
 
+    # pyre-fixme[3]: Return type must be annotated.
     def __init__(self, chanClient: Channel, agent_file_path: str):
+        # pyre-fixme[4]: Attribute must be annotated.
         self._conn = None
         self.agent_file_path = agent_file_path
+        # pyre-fixme[4]: Attribute must be annotated.
         self.__clientProxys = []
         self.__chanC = chanClient
         chanClient.request_forward_agent(self._forward_agent_handler)
 
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def _forward_agent_handler(self, chanRemote):
         self.__clientProxys.append(
             AgentConnectionHandler(chanRemote, self.agent_file_path)
         )
 
+    # pyre-fixme[3]: Return type must be annotated.
     def __del__(self):
         self.close()
 
+    # pyre-fixme[3]: Return type must be annotated.
     def close(self):
         for p in self.__clientProxys:
             p.close()

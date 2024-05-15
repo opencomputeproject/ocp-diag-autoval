@@ -13,13 +13,17 @@ DEFAULT_SUDO_OPTIONS = ["sh", "-lc"]
 
 
 class LocalConn(ConnectionAbstract):
+    # pyre-fixme[2]: Parameter must be annotated.
     def __init__(self, host, sudo: bool = False) -> None:
         self.host = "localhost"
+        # pyre-fixme[4]: Attribute must be annotated.
         self.hostname = host
         self.sudo = sudo
+        # pyre-fixme[4]: Attribute must be annotated.
         self._is_root = None
 
     @property
+    # pyre-fixme[3]: Return type must be annotated.
     def is_root(self):
         if self._is_root is None:
             self._is_root = False
@@ -92,6 +96,8 @@ class LocalConn(ConnectionAbstract):
         # Nothing to be done here
         return
 
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def read_file(self, file_path, decode_ascii, **kwargs):
         # Reads file_path and returns its contents as string
         try:
@@ -102,9 +108,11 @@ class LocalConn(ConnectionAbstract):
             raise Exception("Failed to read file %s: %s" % (file_path, str(e)))
         return content
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def get_file(self, file_path, target, **kwargs) -> None:
         FileActions.copy_tree(file_path, target)
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def put_file(self, file_path, target, **kwargs) -> None:
         FileActions.copy_tree(file_path, target)
 

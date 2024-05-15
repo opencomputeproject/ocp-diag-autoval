@@ -44,12 +44,15 @@ class Component:
 
     """
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def __init__(self, host) -> None:
+        # pyre-fixme[4]: Attribute must be annotated.
         self.host = host
 
     def check_present(self) -> bool:
         return True
 
     @abstractmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def get_config(self):
         return {}

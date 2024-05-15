@@ -13,9 +13,15 @@ from autoval.lib.utils.autoval_log import AutovalLog
 
 
 class ComponentFactory:
+    # pyre-fixme[2]: Parameter must be annotated.
     def __init__(self, host) -> None:
+        # pyre-fixme[4]: Attribute must be annotated.
         self.host = host
+        # pyre-fixme[4]: Attribute must be annotated.
         self.config_components = TEST_CONTROL.get("config_components", None)
+        # pyre-fixme[24]: Generic type `dict` expects 2 type parameters, use
+        #  `typing.Dict[<key type>, <value type>]` to avoid runtime subscripting
+        #  errors.
         self._supported_components: Dict = {
             "DUT": ComponentDUT,
             "BMC": ComponentBMC,
@@ -25,6 +31,8 @@ class ComponentFactory:
             "ASIC": ComponentASIC,
         }
 
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def create(self, start_time=None):
         AutovalLog.log_debug("Started preparing the attached component list")
         components = []

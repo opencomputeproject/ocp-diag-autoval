@@ -19,7 +19,9 @@ from autoval.lib.utils.autoval_output import AutovalOutput as autoval_output
 class AutovalLog:
     _logs_initialized = False
     _debug = False
+    # pyre-fixme[4]: Attribute must be annotated.
     log_level = logging.INFO
+    # pyre-fixme[4]: Attribute must be annotated.
     _version = (
         (float)(sys.version_info[0])
         + (0.1 * (float)(sys.version_info[1]))
@@ -38,6 +40,7 @@ class AutovalLog:
     def set_logging(
         cls,
         console_file_log_enabled: bool = False,
+        # pyre-fixme[2]: Parameter must be annotated.
         filename=None,
         debug: bool = False,
     ) -> None:
@@ -91,13 +94,17 @@ class AutovalLog:
     @classmethod
     def log_cmdlog(
         cls,
+        # pyre-fixme[2]: Parameter must be annotated.
         msg,
+        # pyre-fixme[2]: Parameter must be annotated.
         custom_logfile=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         custom_logout=None,
     ) -> None:
         cls._log(msg, custom_logfile, custom_logout)
 
     @classmethod
+    # pyre-fixme[2]: Parameter must be annotated.
     def log_as_cmd(cls, msg) -> None:
         """
         Add an arbitrary message to the cmd_metrics and cmdlog logfiles
@@ -108,6 +115,8 @@ class AutovalLog:
         cls.log_cmdlog(msg)
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def filter_stacks(cls, stacklevel, previous_frame, current_frame):
 
         if "run" in current_frame.f_code.co_name and any(
@@ -158,23 +167,28 @@ class AutovalLog:
         return stacklevel
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def get_stacklevel(cls):
 
         if cls._version < 3.8:
             return None
         stacklevel = 3
 
+        # pyre-fixme[16]: Optional type has no attribute `f_back`.
         previous_frame = inspect.currentframe().f_back.f_back.f_back
         current_frame = inspect.currentframe().f_back.f_back.f_back
 
         return cls.filter_stacks(stacklevel, previous_frame, current_frame)
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def get_cmdlog_stacklevel(cls, msg):
         if cls._version < 3.8:
             return None
         stacklevel = 3
 
+        # pyre-fixme[16]: Optional type has no attribute `f_back`.
         previous_frame = inspect.currentframe().f_back.f_back.f_back
         current_frame = inspect.currentframe().f_back.f_back.f_back
         while True:
@@ -186,6 +200,7 @@ class AutovalLog:
         return cls.filter_stacks(stacklevel, previous_frame, current_frame)
 
     @classmethod
+    # pyre-fixme[2]: Parameter must be annotated.
     def log_info(cls, msg, ocp_log=False) -> None:
         """
         Placeholder for logging functionality. Currently just uses logging
@@ -197,6 +212,7 @@ class AutovalLog:
             autoval_output.log(severity="INFO", msg=msg)
 
     @classmethod
+    # pyre-fixme[2]: Parameter must be annotated.
     def log_debug(cls, msg) -> None:
         """
         Placeholder for logging functionality. Currently just uses logging
@@ -207,6 +223,7 @@ class AutovalLog:
         logging.debug(**AutovalLog.get_log_args(msg))
 
     @classmethod
+    # pyre-fixme[2]: Parameter must be annotated.
     def log_warning(cls, msg) -> None:
         """
         Placeholder for logging functionality. Currently just uses logging
@@ -216,6 +233,7 @@ class AutovalLog:
         logging.warning(**AutovalLog.get_log_args(msg))
 
     @classmethod
+    # pyre-fixme[2]: Parameter must be annotated.
     def log_error(cls, msg) -> None:
         """
         Placeholder for logging functionality. Currently just uses logging
@@ -225,6 +243,8 @@ class AutovalLog:
         logging.error(**AutovalLog.get_log_args(msg))
 
     @classmethod
+    # pyre-fixme[24]: Generic type `dict` expects 2 type parameters, use
+    #  `typing.Dict[<key type>, <value type>]` to avoid runtime subscripting errors.
     def get_log_args(cls, msg: str) -> Dict:
         args = {
             "msg": msg,
@@ -240,6 +260,7 @@ class AutovalLog:
         logging.getLogger().setLevel(logging.DEBUG)
 
     @classmethod
+    # pyre-fixme[2]: Parameter must be annotated.
     def log_test_result(cls, msg) -> None:
         if not cls._logs_initialized:
             cls._init_logs()
@@ -249,8 +270,11 @@ class AutovalLog:
     @classmethod
     def _log(
         cls,
+        # pyre-fixme[2]: Parameter must be annotated.
         msg,
+        # pyre-fixme[2]: Parameter must be annotated.
         custom_logfile=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         custom_logout=None,
     ) -> None:
         if not cls._logs_initialized:
@@ -287,6 +311,8 @@ class AutovalLog:
         FileActions().write_data(custom_logfile, output)
 
     @classmethod
+    # pyre-fixme[24]: Generic type `dict` expects 2 type parameters, use
+    #  `typing.Dict[<key type>, <value type>]` to avoid runtime subscripting errors.
     def test_control(cls) -> Dict:
         from autoval.lib.test_args import TEST_CONTROL
 
@@ -370,6 +396,7 @@ class AutovalLog:
         _logger.propagate = False
 
     @classmethod
+    # pyre-fixme[2]: Parameter must be annotated.
     def namer(cls, name) -> str:
         current_timestamp = time.strftime(
             "%Y-%m-%d-%H%M%S", time.localtime(time.time())
@@ -381,6 +408,7 @@ class AutovalLog:
             return f"{name}.{current_timestamp}"
 
     @classmethod
+    # pyre-fixme[2]: Parameter must be annotated.
     def gzip_rotator(cls, source, dest) -> None:
         AutovalLog.log_info(
             f"cmdlog.log size has been reached 1 GB limit, compressed and rotated as {os.path.basename(dest)}"

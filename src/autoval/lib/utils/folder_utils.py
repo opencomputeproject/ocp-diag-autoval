@@ -15,7 +15,13 @@ class FolderTransfer:
     LOCAL_PREFIX = "/tmp/local_folderxfer"
 
     def __init__(
-        self, remote_conn, *, local_path: str, remote_path: str, verbose: bool = False
+        self,
+        # pyre-fixme[2]: Parameter must be annotated.
+        remote_conn,
+        *,
+        local_path: str,
+        remote_path: str,
+        verbose: bool = False,
     ) -> None:
         """
         Create a Folder Transfer Object
@@ -31,6 +37,7 @@ class FolderTransfer:
         """
         self.verbose = verbose
 
+        # pyre-fixme[4]: Attribute must be annotated.
         self.connection = remote_conn
         self.local_path = pathlib.Path(local_path)
         self.remote_path = pathlib.Path(remote_path)
@@ -93,6 +100,7 @@ class FolderTransfer:
         finally:
             self._rm_temp_tars()
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def vlog(self, *args, **kwargs) -> None:
         """
         Logs if verbose is set on this object.
@@ -106,6 +114,7 @@ class FolderTransfer:
         if self.verbose:
             AutovalLog.log_info(*args, **kwargs)
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def _check_dir(self, *, local, create_if_missing) -> None:
         """
         Check if a directory exists.
@@ -161,6 +170,8 @@ class FolderTransfer:
                     fec.REMOTE_FOLDER_DOES_NOT_EXIST,
                 )
 
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def _get_folder_and_tar(self, local):
         """
         Get the folder name and the tarfile name given if local or not.
@@ -174,6 +185,7 @@ class FolderTransfer:
             return (self.local_path, self.local_tarfile)
         return (self.remote_path, self.remote_tarfile)
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def _create_tar(self, *, local) -> None:
         """
         Creates a tarfile from the folder.
@@ -214,6 +226,7 @@ class FolderTransfer:
             )
             raise FolderTransferError(msg, ec)
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def _transfer_tar(self, *, to_local) -> None:
         """
         Transfer tar from local to remote or vice versa.
@@ -253,6 +266,7 @@ class FolderTransfer:
                 )
                 raise FolderTransferError(msg, fec.DATA_TRANSFER_ERROR)
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def _unpack_tar(self, *, local, overwrite) -> None:
         """
         Unpacks a tarfile into a folder.

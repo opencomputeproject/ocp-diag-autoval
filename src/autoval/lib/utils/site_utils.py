@@ -17,7 +17,9 @@ RESULTS_DIR = "results/autoval/"
 
 
 class SiteUtils:
+    # pyre-fixme[4]: Attribute must be annotated.
     _site_settings = None
+    # pyre-fixme[4]: Attribute must be annotated.
     _log_dirs = {
         "dut_logdir": None,
         "dut_tmpdir": None,
@@ -27,9 +29,11 @@ class SiteUtils:
         "resultsdir": None,
         "system_logdir": None,
     }
+    # pyre-fixme[4]: Attribute must be annotated.
     repository_dir = None
 
     @classmethod
+    # pyre-fixme[2]: Parameter must be annotated.
     def init_logdirs_on_control_server(cls, test_obj) -> None:
         try:
             repo = test_obj.config.get("repository_dir", None)
@@ -59,6 +63,7 @@ class SiteUtils:
         test_obj.tmpdir = cls.get_tmpdir()
 
     @classmethod
+    # pyre-fixme[2]: Parameter must be annotated.
     def init_logdirs_on_test_host(cls, test_obj) -> None:
         """
         Create log directories in the DUT's
@@ -80,16 +85,19 @@ class SiteUtils:
             raise
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def shared_storage(cls):
         from autoval.lib.utils.file_actions import FileActions
 
         return FileActions
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def get_site_yum_repo_name(cls):
         return cls.get_site_setting("yum_repo", raise_error=False)
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def load_site_settings(
         cls,
         env_var: str = "SITE_SETTINGS",
@@ -116,6 +124,7 @@ class SiteUtils:
         return site_settings_file
 
     @classmethod
+    # pyre-fixme[2]: Parameter must be annotated.
     def create_dut_logdirs(cls, logdir, hosts, testname, test_start_time) -> None:
         # Create tmp dir on all the DUT's under test
         # which will be deleted at the end of the test
@@ -138,8 +147,13 @@ class SiteUtils:
             SiteUtils._create_dut_log_directory("dut_logdir", dir_path, host)
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def create_control_server_logdirs(
-        cls, hostname: str, testname, test_start_time: float
+        cls,
+        hostname: str,
+        # pyre-fixme[2]: Parameter must be annotated.
+        testname,
+        test_start_time: float,
     ):
         # Create Log dir on the control server (fbje/controller) which will be
         # archive to resultsdir at the end of the test
@@ -167,6 +181,7 @@ class SiteUtils:
         return dir_path
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def _create_controller_log_directory(cls, dir_name: str, dir_path: str, host: str):
         """
         control_server_logdir --> Log dir at control server and archived at the
@@ -182,6 +197,8 @@ class SiteUtils:
         return cls._log_dirs[dir_name]
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def _create_dut_log_directory(cls, dir_name: str, dir_path: str, host):
         """
         dut_logdir --> Log dir at DUT and archived at the end the test. Used to
@@ -196,15 +213,21 @@ class SiteUtils:
         return cls._log_dirs[dir_name]
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def _dut_make_dir(cls, path, host):
         cls.shared_storage().mkdirs(path=path, host=host)
         return path
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def make_dir(cls, path, force: bool = False):
         return GenericUtils.create_dir(path, force)
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def _get_log_dirs(cls, dir_name=None):
         empty_dir = None
         if dir_name is not None:
@@ -224,8 +247,17 @@ class SiteUtils:
         )
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def create_resultsdir(
-        cls, logdir=None, hostname=None, testname=None, test_start_time=None
+        cls,
+        # pyre-fixme[2]: Parameter must be annotated.
+        logdir=None,
+        # pyre-fixme[2]: Parameter must be annotated.
+        hostname=None,
+        # pyre-fixme[2]: Parameter must be annotated.
+        testname=None,
+        # pyre-fixme[2]: Parameter must be annotated.
+        test_start_time=None,
     ):
         tmpdir = "tmpdir"
         resultsdir = "resultsdir"
@@ -257,6 +289,7 @@ class SiteUtils:
         return cls._log_dirs[resultsdir]
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def get_critical_services(cls):
         services = cls.get_site_setting("dut_critical_services", raise_error=False)
         if services is not None:
@@ -264,6 +297,7 @@ class SiteUtils:
         return []
 
     @classmethod
+    # pyre-fixme[2]: Parameter must be annotated.
     def _push_log_to_resultsdir(cls, log_file) -> None:
         try:
             source_path = os.path.join(cls.get_control_server_logdir(), log_file)
@@ -280,6 +314,7 @@ class SiteUtils:
             # Failing to copy, Logs will be compressed in the control server log archive
 
     @classmethod
+    # pyre-fixme[2]: Parameter must be annotated.
     def _push_log_to_system_logs_dir(cls, log_file) -> None:
         """
         This method copies local log files from control_server_tmpdir to system_logs dir
@@ -312,6 +347,7 @@ class SiteUtils:
             AutovalLog.log_info(f"failed to copy cmdlog.log - {ex}")
 
     @classmethod
+    # pyre-fixme[2]: Parameter must be annotated.
     def cleanup_log_directories(cls, hosts, connect_to_host: bool = True) -> None:
         """
         dut_logdir --> Log dir at DUT and achieve at the end the test.
@@ -361,6 +397,7 @@ class SiteUtils:
             cls.cleanup_dut_logdirs(hosts)
 
     @classmethod
+    # pyre-fixme[2]: Parameter must be annotated.
     def cleanup_dut_logdirs(cls, hosts) -> None:
         for host in hosts:
             try:
@@ -370,8 +407,12 @@ class SiteUtils:
             else:
                 is_dut_log_empty = cls._is_dir_empty(host, dut_logdir)
                 try:
+                    # pyre-fixme[21]: Could not find module
+                    #  `autoval.lib.test_utils.system_utils`.
                     from autoval.lib.test_utils.system_utils import get_serial_number
 
+                    # pyre-fixme[16]: Module `test_utils` has no attribute
+                    #  `system_utils`.
                     serial_number = get_serial_number("baseboard", host)
                 except Exception:
                     AutovalLog.log_info("Unable to get the serial number")
@@ -392,6 +433,8 @@ class SiteUtils:
                 pass
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def backup_dut_tmpdir(cls, hosts):
         for host in hosts:
             AutovalLog.log_debug(f"Starting backup of tmpdir for host {host.hostname}")
@@ -405,6 +448,8 @@ class SiteUtils:
                 try:
                     from autoval.lib.test_utils.system_utils import get_serial_number
 
+                    # pyre-fixme[16]: Module `test_utils` has no attribute
+                    #  `system_utils`.
                     serial_number = get_serial_number("baseboard", host)
                 except Exception as ex:
                     AutovalLog.log_debug(
@@ -423,6 +468,7 @@ class SiteUtils:
                 )
 
     @classmethod
+    # pyre-fixme[2]: Parameter must be annotated.
     def _is_dir_empty(cls, host, dir_path, local: bool = False) -> bool:
         cmd = "ls %s" % dir_path
         if not local:
@@ -441,7 +487,14 @@ class SiteUtils:
 
     @classmethod
     def _archive_to_resultsdir(
-        cls, host, dir_to_arc, filename, local: bool = False
+        cls,
+        # pyre-fixme[2]: Parameter must be annotated.
+        host,
+        # pyre-fixme[2]: Parameter must be annotated.
+        dir_to_arc,
+        # pyre-fixme[2]: Parameter must be annotated.
+        filename,
+        local: bool = False,
     ) -> None:
         arc_to = cls.get_resultsdir() + "/" + filename
         archive_dir = "archive"
@@ -461,6 +514,7 @@ class SiteUtils:
         )
 
     @classmethod
+    # pyre-fixme[2]: Parameter must be annotated.
     def _delete_dir(cls, dir_path: str, host, local: bool = False) -> None:
         cmd = "rm -rf %s" % dir_path
         if local:
@@ -472,6 +526,8 @@ class SiteUtils:
             host.run(cmd)
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def get_full_path_for_dir(cls, path, hostname, testname, test_start_time: float):
         _host = hostname.replace(".facebook.com", "") if hostname is not None else ""
         _date = datetime.fromtimestamp(test_start_time).strftime("%Y-%m-%d_%H-%M-%S")
@@ -479,28 +535,36 @@ class SiteUtils:
         return _full_path
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def get_log_dirs(cls):
         return cls._get_log_dirs()
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def get_tmpdir(cls):
         return cls._get_log_dirs(dir_name="tmpdir")
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def get_resultsdir(cls):
         return cls._get_log_dirs(dir_name="resultsdir")
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def get_dut_tmpdir(cls, hostname=None):
         if hostname:
             return cls._get_log_dirs(dir_name="dut_tmpdir")[hostname]
         return cls._get_log_dirs(dir_name="dut_tmpdir")
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def get_control_server_tmpdir(cls):
         return cls._get_log_dirs(dir_name="control_server_tmpdir")
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def get_dut_logdir(cls, hostname=None):
         # traceback.print_stack()
         if hostname:
@@ -508,21 +572,27 @@ class SiteUtils:
         return cls._get_log_dirs(dir_name="dut_logdir")
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def get_control_server_logdir(cls):
         return cls._get_log_dirs(dir_name="control_server_logdir")
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def get_data_plugins(cls):
         try:
+            # pyre-fixme[6]: For 2nd argument expected `bool` but got `None`.
             return cls.get_site_setting("data_plugin", None)
         except TestError:
             return False
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def get_system_logdir(cls):
         return cls._get_log_dirs(dir_name="system_logdir")
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def get_site_setting(cls, name, raise_error: bool = True):
         """
         This function retrieves given setting from the site settings.
@@ -544,12 +614,14 @@ class SiteUtils:
         return setting
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def get_site_settings(cls):
         if not cls._site_settings:
             cls._site_settings = cls.load_site_settings()
         return cls._site_settings
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def _get_repository_dir(cls):
         if cls.repository_dir:
             return cls.repository_dir
@@ -558,16 +630,19 @@ class SiteUtils:
         return repository_dir
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def get_golden_config_path(cls):
         repo = cls._get_repository_dir()
         return os.path.join(repo, "golden_config")
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def get_firmware_path(cls):
         repo = cls._get_repository_dir()
         return os.path.join(repo, "bin")
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def get_upick_path(cls):
         """
         This function retrieves the upick path from the site settings.
@@ -579,11 +654,13 @@ class SiteUtils:
         return cls.get_site_setting("upick_path", raise_error=True)
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def get_tool_path(cls):
         repo = cls._get_repository_dir()
         return os.path.join(repo, "tools")
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def get_ssh_key_path(cls):
         key_path = None
         try:
@@ -596,6 +673,7 @@ class SiteUtils:
         return key_path
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def get_plugin_config_path(cls):
         plugin_config_default_path = r"plugins/plugin_config.json"
         plugin_config_path = None

@@ -18,18 +18,25 @@ class System:
     System class represents a DUT (Device Under Test) and provides methods to interact with it.
     """
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def __init__(self, host) -> None:
+        # pyre-fixme[4]: Attribute must be annotated.
         self.connection = host.connection_obj.host_connection
+        # pyre-fixme[4]: Attribute must be annotated.
         self.hostname = host.connection_obj.hostname
         self.product_name = "System"
         self.oob = self.bmc = BMC(
             connection=host.connection_obj.bmc_connections[0], host=host
         )
+        # pyre-fixme[4]: Attribute must be annotated.
         self.host = host
 
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def __getattr__(self, name):
         return getattr(self.connection, name)
 
+    # pyre-fixme[3]: Return type must be annotated.
     def get_expander(self):
         return {}
 
@@ -61,6 +68,7 @@ class System:
         out = self.run(cmd=cmd)
 
     @classmethod
+    # pyre-fixme[2]: Parameter must be annotated.
     def _cycle_host(cls, host, cycle_type) -> None:  # noqa: C901
         if cycle_type == "dc":
             host.oob.cycle()
@@ -99,6 +107,8 @@ class System:
             host.oob.misc_power_util(cycle_type)
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def cycle_host(cls, host, cycle_type: str, log_boot_variance: bool = False):
         """
         Cycles the host and optionally logs the boot variance before and after the cycle.
@@ -211,6 +221,7 @@ class System:
                 log_on_pass=False,
             )
 
+    # pyre-fixme[3]: Return type must be annotated.
     def check_services(self, services: List[str]):
         """
         Checks the status of given list of services.

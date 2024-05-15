@@ -18,20 +18,33 @@ class AutovalThreadError(TestError):
     Exception for errors occuring within an Autoval Thread.
     """
 
+    # pyre-fixme[3]: Return type must be annotated.
     def __init__(
-        self, message: str = "AutoVal Thread Error", component=None, error_type=None
+        self,
+        message: str = "AutoVal Thread Error",
+        # pyre-fixme[2]: Parameter must be annotated.
+        component=None,
+        # pyre-fixme[2]: Parameter must be annotated.
+        error_type=None,
     ):
         super().__init__(message=message, error_type=error_type, component=component)
 
 
 class AutovalThread(threading.Thread):
+    # pyre-fixme[2]: Parameter must be annotated.
     def __init__(self, exception_queue, target, *args, barrier=None, **kwargs) -> None:
         threading.Thread.__init__(self)
+        # pyre-fixme[4]: Attribute must be annotated.
         self.exception_queue = exception_queue
+        # pyre-fixme[4]: Attribute must be annotated.
         self._autoval_target = target
+        # pyre-fixme[4]: Attribute must be annotated.
         self._autoval_args = args
+        # pyre-fixme[4]: Attribute must be annotated.
         self._autoval_kwargs = kwargs
+        # pyre-fixme[4]: Attribute must be annotated.
         self._barrier = barrier
+        # pyre-fixme[4]: Attribute must be annotated.
         self._return = None
 
     def run(self) -> None:
@@ -49,7 +62,9 @@ class AutovalThread(threading.Thread):
             raise
 
     @staticmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def start_autoval_thread(
+        # pyre-fixme[24]: Generic type `Callable` expects 2 type parameters.
         target: Callable,
         *def_args: Any,
         barrier: Optional[Barrier] = None,
@@ -74,7 +89,9 @@ class AutovalThread(threading.Thread):
         return (_t, _q)
 
     @staticmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def wait_for_autoval_thread(
+        # pyre-fixme[2]: Parameter must be annotated.
         queue_thread_list,
         timeout: Optional[int] = None,
     ):
@@ -116,6 +133,7 @@ class AutovalThread(threading.Thread):
         return results
 
     @staticmethod
+    # pyre-fixme[24]: Generic type `tuple` expects at least 1 type parameter.
     def get_thread_errs(threads: List[Tuple]) -> List[str]:
         """Poll the exceptions from queue of each thread.
 

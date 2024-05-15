@@ -9,6 +9,7 @@ import six
 @six.add_metaclass(ABCMeta)
 class TestUtilsBase:
     @classmethod
+    # pyre-fixme[2]: Parameter must be annotated.
     def __init_subclass__(cls, **kwargs) -> None:
         super(TestUtilsBase, cls).__init_subclass__(**kwargs)
         verify_abs_method_signature(cls)
@@ -25,10 +26,12 @@ class TestUtilsBase:
         pass
 
     @abstractmethod
+    # pyre-fixme[3]: Return annotation cannot be `Any`.
     def parse_results(self) -> Any:
         pass
 
 
+# pyre-fixme[2]: Parameter must be annotated.
 def verify_abs_method_signature(cls) -> None:
     # Check the subclass of TestBase doesnt change signature of abstract methods
     sub_class_members = getmembers(cls)

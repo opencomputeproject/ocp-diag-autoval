@@ -21,12 +21,15 @@ class TestUtilsRunner(TestUtilsBase):
     Utility to run the test which extended TestUtilsBase
     """
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def __init__(self, host, util: str, util_args) -> None:
         super(TestUtilsRunner, self).__init__()
         self.host = Host(AutovalUtils.get_host_dict(host))
+        # pyre-fixme[4]: Attribute must be annotated.
         self.util_obj = None
         self.initialize_util(util, util_args)
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def initialize_util(self, util: str, util_args) -> None:
         test_utils_config_path = SiteUtils.get_test_utils_plugin_config_path()
         PluginManager.load_plugins(test_utils_config_path)
@@ -42,9 +45,11 @@ class TestUtilsRunner(TestUtilsBase):
     def start_test(self) -> None:
         self.util_obj.start_test()
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def stop_test(self, *args, **kwargs) -> None:
         if "stop_test" in dir(self.util_obj):
             self.util_obj.stop_test(*args, **kwargs)
 
+    # pyre-fixme[3]: Return annotation cannot be `Any`.
     def parse_results(self) -> Any:
         self.util_obj.parse_results()

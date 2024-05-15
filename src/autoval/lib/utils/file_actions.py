@@ -30,6 +30,8 @@ FS_RETRY_LIMIT = 6
 FS_SLEEP_TIME = 2
 
 
+# pyre-fixme[3]: Return type must be annotated.
+# pyre-fixme[2]: Parameter must be annotated.
 def _exc_handler(func):
     """
     Decorate an object method.
@@ -37,6 +39,9 @@ def _exc_handler(func):
     The "_handle_exception" method is assumed to exist.
     """
 
+    # pyre-fixme[53]: Captured variable `func` is not annotated.
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def wrapper(self, *args, **kwargs):
         try:
             return func(self, *args, **kwargs)
@@ -48,6 +53,7 @@ def _exc_handler(func):
 
 class FileActions:
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def get_path_manager(cls):
         """Returns pathmanager plugin or g_pathmgr if plugin does not exist"""
 
@@ -59,8 +65,14 @@ class FileActions:
         return path_manager
 
     @staticmethod
+    # pyre-fixme[3]: Return annotation cannot be `Any`.
     def _run_remote_module(
-        host: ConnectionAbstract, method: str, params: List, timeout: int = 600
+        host: ConnectionAbstract,
+        method: str,
+        # pyre-fixme[24]: Generic type `list` expects 1 type parameter, use
+        #  `typing.List[<element type>]` to avoid runtime subscripting errors.
+        params: List,
+        timeout: int = 600,
     ) -> Any:
         out = AutovalUtils.run_remote_module(
             module="havoc.autoval.lib.utils.file_actions",
@@ -195,6 +207,7 @@ class FileActions:
     def write_data(
         cls,
         path: str,
+        # pyre-fixme[2]: Parameter annotation cannot be `Any`.
         contents: Any,
         append: bool = False,
         host: Optional[ConnectionAbstract] = None,
@@ -241,6 +254,7 @@ class FileActions:
 
     @classmethod
     @_exc_handler
+    # pyre-fixme[3]: Return annotation cannot be `Any`.
     def read_data(
         cls,
         path: str,
@@ -249,6 +263,7 @@ class FileActions:
         list_data: bool = False,
         csv_reader: bool = False,
         host: Optional[ConnectionAbstract] = None,
+        # pyre-fixme[2]: Parameter must be annotated.
         **kwargs,
     ) -> Union[str, Any]:
         """
@@ -297,6 +312,8 @@ class FileActions:
         return contents
 
     @classmethod
+    # pyre-fixme[24]: Generic type `dict` expects 2 type parameters, use
+    #  `typing.Dict[<key type>, <value type>]` to avoid runtime subscripting errors.
     def read_resource_file(cls, file_path: str, module: str = "autoval") -> Dict:
         """This function reads the resource json config file and returns the dictionary.
         If the file does not exist, it raises FileNotFoundError
@@ -324,6 +341,7 @@ class FileActions:
             raise FileNotFoundError(f"Config file {absolute_file_path} does not exist")
 
     @staticmethod
+    # pyre-fixme[2]: Parameter must be annotated.
     def get_resource_file_path(file_path: str, module=None) -> str:
         """This function returns the absolute path of config file.
         If the file path does not exist, it raises exception
@@ -353,6 +371,7 @@ class FileActions:
 
     @classmethod
     @_exc_handler
+    # pyre-fixme[3]: Return type must be annotated.
     def get_local_path(
         cls,
         host: Optional[ConnectionAbstract],
@@ -580,6 +599,8 @@ class FileActions:
             os.chmod(path, st.st_mode | stat.S_IEXEC)
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def _handle_exception(cls, exception):
         """
         A handler method for exception handeling

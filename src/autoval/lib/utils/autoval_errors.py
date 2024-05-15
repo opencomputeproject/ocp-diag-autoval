@@ -49,8 +49,12 @@ class ErrorType(Enum):
 
     __slots__ = "_value_", "error_category"
 
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def __init__(self, value, error_category=None):
+        # pyre-fixme[4]: Attribute must be annotated.
         self._value_ = value
+        # pyre-fixme[4]: Attribute must be annotated.
         self.error_category = error_category
 
     UNKNOWN = "UNKNOWN", ErrorCategory.UNKNOWN

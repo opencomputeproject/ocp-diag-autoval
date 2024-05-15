@@ -34,6 +34,7 @@ class BgRunner:
     cycle.
     """
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def __init__(self, host, runner) -> None:
         """Initializes the Bg Runner Test.
 
@@ -50,12 +51,18 @@ class BgRunner:
             'args': {Utilargs}
             'interval': <interval to loop>,
         """
+        # pyre-fixme[4]: Attribute must be annotated.
         self.host_dict = AutovalUtils.get_host_dict(host)
+        # pyre-fixme[4]: Attribute must be annotated.
         self._thread = None
         self.stop_runner = False
+        # pyre-fixme[4]: Attribute must be annotated.
         self.runner_name = runner["name"]
+        # pyre-fixme[4]: Attribute must be annotated.
         self.runner_args = runner.get("args", None)
+        # pyre-fixme[4]: Attribute must be annotated.
         self.interval = runner.get("interval", 60)
+        # pyre-fixme[4]: Attribute must be annotated.
         self.runner_obj = None
 
     def start_bg_runner(self) -> None:
@@ -122,9 +129,11 @@ class BgMonitor:
     different test stages i.e back ground monitors on cycle test.
     """
 
+    # pyre-fixme[4]: Attribute must be annotated.
     active_bg_monitors = defaultdict(list)
 
     @classmethod
+    # pyre-fixme[2]: Parameter must be annotated.
     def start_monitors(cls, host, monitors_args) -> None:
         """Start Monitors.
 

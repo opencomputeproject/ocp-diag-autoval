@@ -1,5 +1,9 @@
 from autoval.lib.host.component.component import Component
+
+# pyre-fixme[21]: Could not find module `autoval.lib.test_utils.pci_utils`.
 from autoval.lib.test_utils.pci_utils import PciUtils
+
+# pyre-fixme[21]: Could not find module `autoval.lib.test_utils.system_utils`.
 from autoval.lib.test_utils.system_utils import get_acpi_interrupt, get_serial_number
 
 from autoval.lib.utils.autoval_log import AutovalLog
@@ -7,17 +11,31 @@ from autoval.lib.utils.autoval_log import AutovalLog
 
 class ComponentDUT(Component):
     def __init__(
-        self, host, start: bool = True, logdir=None, start_time=None, dump_location=None
+        self,
+        # pyre-fixme[2]: Parameter must be annotated.
+        host,
+        start: bool = True,
+        # pyre-fixme[2]: Parameter must be annotated.
+        logdir=None,
+        # pyre-fixme[2]: Parameter must be annotated.
+        start_time=None,
+        # pyre-fixme[2]: Parameter must be annotated.
+        dump_location=None,
     ) -> None:
         self.start = start
+        # pyre-fixme[4]: Attribute must be annotated.
         self.host = host
+        # pyre-fixme[4]: Attribute must be annotated.
         self.dump_location = dump_location
+        # pyre-fixme[4]: Attribute must be annotated.
         self.log_dir = logdir
+        # pyre-fixme[4]: Attribute must be annotated.
         self.start_time = start_time
 
     def check_present(self) -> bool:
         return True
 
+    # pyre-fixme[3]: Return type must be annotated.
     def get_config(self):
         AutovalLog.log_cmdlog("++++Start of DUT Component Config Check++++")
         AutovalLog.log_debug("+++Getting DUT info")
@@ -33,6 +51,7 @@ class ComponentDUT(Component):
         AutovalLog.log_debug("+++Getting mem info")
         dut_info.update(self.host.get_meminfo())
         AutovalLog.log_debug("+++Getting lspci info")
+        # pyre-fixme[16]: Module `test_utils` has no attribute `pci_utils`.
         dut_info["lspci"] = PciUtils().get_lspci_output(self.host)
         AutovalLog.log_debug("+++Getting project info")
         dut_info.update(self.host.get_project_info())
@@ -47,6 +66,7 @@ class ComponentDUT(Component):
             dut_info.update(bic_dict)
 
         AutovalLog.log_debug("+++Getting lspci verbose info")
+        # pyre-fixme[16]: Module `test_utils` has no attribute `pci_utils`.
         dut_info.update(PciUtils().get_lspci_verbose(self.host, self.start))
 
         AutovalLog.log_debug("+++Getting system log errors")
@@ -55,9 +75,11 @@ class ComponentDUT(Component):
         )
 
         if self.host.is_root:
+            # pyre-fixme[16]: Module `test_utils` has no attribute `system_utils`.
             serial_number = get_serial_number("baseboard", self.host)
         else:
             serial_number = "UNKNOWN"
+        # pyre-fixme[16]: Module `test_utils` has no attribute `system_utils`.
         dut_info["acpi_difference"] = get_acpi_interrupt(self.host)
         dut_info.update(self.host.get_config())
         AutovalLog.log_cmdlog("++++End of DUT Component Config Check++++")

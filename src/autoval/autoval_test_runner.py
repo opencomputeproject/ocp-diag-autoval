@@ -18,10 +18,15 @@ from autoval.plugins.plugin_manager import PluginManager
 
 
 class AutovalLogger:
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def __init__(self, control_server_temp_dir):
+        # pyre-fixme[4]: Attribute must be annotated.
         self.control_server_temp_dir = control_server_temp_dir
+        # pyre-fixme[4]: Attribute must be annotated.
         self.autoval_runner_debug_log = None
 
+    # pyre-fixme[3]: Return type must be annotated.
     def setup(
         self,
         test_name: str,
@@ -47,6 +52,8 @@ class AutovalLogger:
         else:
             AutovalLog.set_logging(debug=debug)
 
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[9]: dest_log_path has type `str`; used as `None`.
     def save_logger_output(self, dest_log_path: str = None):
         # restore logging to default settings.
         AutovalLog.set_logging()
@@ -70,21 +77,34 @@ class AutovalLogger:
 
 
 class AutoValTestRunner:
+    # pyre-fixme[2]: Parameter must be annotated.
     def __init__(self, parser) -> None:
+        # pyre-fixme[4]: Attribute must be annotated.
         self.test_module = parser.test_module
+        # pyre-fixme[4]: Attribute must be annotated.
         self.test_class = parser.test_class
+        # pyre-fixme[4]: Attribute must be annotated.
         self.suite = parser.suite
+        # pyre-fixme[4]: Attribute must be annotated.
         self.dry_run = parser.dry_run
+        # pyre-fixme[4]: Attribute must be annotated.
         self.function_name = parser.func_name
+        # pyre-fixme[4]: Attribute must be annotated.
         self.function_args = parser.func_args
+        # pyre-fixme[4]: Attribute must be annotated.
         self.run_local_code = parser.run_local_code
+        # pyre-fixme[4]: Attribute must be annotated.
         self.save_console_log = parser.save_console_log
+        # pyre-fixme[4]: Attribute must be annotated.
         self.debug = parser.debug
         # initialize Test args.
         self._test_args = TestArgs(parser)
+        # pyre-fixme[4]: Attribute must be annotated.
         self.parser = parser
+        # pyre-fixme[4]: Attribute must be annotated.
         self.control_server_temp_dir = None
 
+    # pyre-fixme[3]: Return type must be annotated.
     def get_control_server_tmp_dir(self):
         site_settings_details = SiteUtils.get_site_settings()
         _control_server_temp_dir = site_settings_details["control_server_tmpdir"]

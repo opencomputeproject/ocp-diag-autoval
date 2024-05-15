@@ -32,16 +32,24 @@ class BMC:
 
     CRITICAL_SERVICES_MIN_UPTIME = 120
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def __init__(self, connection, host) -> None:
+        # pyre-fixme[4]: Attribute must be annotated.
         self.__connection = connection
+        # pyre-fixme[4]: Attribute must be annotated.
         self.hostname = self.__connection.hostname
+        # pyre-fixme[4]: Attribute must be annotated.
         self.host = host
+        # pyre-fixme[4]: Attribute must be annotated.
         self.oob_addr = host.connection_obj.host_dict.get("oob_addr")
         if self.oob_addr:
+            # pyre-fixme[4]: Attribute must be annotated.
             self.bmc_host = self.host.connection_obj._bmc_connections[0]
         else:
             self.bmc_host = self.host.localhost
 
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def __getattr__(self, name):
         return getattr(self.__connection, name)
 
@@ -186,6 +194,7 @@ class BMC:
                 f"Service {service} uptime {uptime} is less than expected uptime {expected_uptime}"
             )
 
+    # pyre-fixme[3]: Return type must be annotated.
     def get_critical_services(self):
         """
         Returns a list of services that are always expected to
@@ -193,6 +202,7 @@ class BMC:
         """
         return ["sensord", "healthd", "fscd", "ipmid"]
 
+    # pyre-fixme[3]: Return type must be annotated.
     def get_bmc_ipv6_addr(self, interface: str = "eth0"):
         """
         Get the ipv6 address for bmc
@@ -223,6 +233,7 @@ class BMC:
             return ip_addr
         raise TestError(f"Did not find IP type inet6 in {out}")
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def get_fio_trigger_cmd(self, cmd_type, remote: bool = False) -> str:
         """Return trigger command for FIO"""
         cmd = None
@@ -265,6 +276,8 @@ class BMC:
             raise TestError("No supported trigger command found")
         return cmd
 
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def get_cycle_command(self, slot_id=None):
         """Return dictionary of cycle commands"""
         boot_dic = {}
@@ -313,7 +326,11 @@ class BMC:
         self.post_cycle_check()
 
     def ac_cycle(
-        self, timeout: int = 1200, reboot_check: bool = True, slot=None
+        self,
+        timeout: int = 1200,
+        reboot_check: bool = True,
+        # pyre-fixme[2]: Parameter must be annotated.
+        slot=None,
     ) -> str:
         """Execute AC power-cycle"""
         boot_cmd = self.get_cycle_command(slot)
@@ -369,6 +386,7 @@ class BMC:
         )
         self.post_cycle_check()
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def _try_ac_cycle(self, cmd) -> bool:
         AutovalLog.log_info("AC Cycling now: %s" % cmd)
         try:
@@ -378,6 +396,7 @@ class BMC:
         else:
             return True
 
+    # pyre-fixme[3]: Return type must be annotated.
     def power_off(self, timeout: float = 600):
         """Execute power-off"""
         boot_cmd = self.get_cycle_command()
@@ -427,8 +446,11 @@ class BMC:
     def reboot(
         self,
         timeout: int = 600,
+        # pyre-fixme[2]: Parameter must be annotated.
         filter_errors=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         critical_services=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         skip_bmc_version_check=None,
     ) -> None:
         """Execute OpenBMC reboot, takes approx 2 mins"""
@@ -451,6 +473,7 @@ class BMC:
         )
         self.post_cycle_check(filter_errors)
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def twelve_volt_off(self, timeout: float = 600, slot=None) -> None:
         """
         The command is 12V off which powers off the
@@ -476,6 +499,7 @@ class BMC:
             raise Exception("Failed to power down system")
         AutovalLog.log_info("Power Down complete")
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def twelve_volt_on(self, timeout: int = 1200, last_reboot=None, slot=None) -> None:
         """
         The command is 12V on which powers on the
@@ -516,6 +540,7 @@ class BMC:
         time.sleep(30)
         self.twelve_volt_on(timeout, last_reboot, slot)
 
+    # pyre-fixme[3]: Return type must be annotated.
     def hmc_reset(self):
         """
         HMC Reset
@@ -530,6 +555,8 @@ class BMC:
         self.hmc_has_rebooted()
         AutovalLog.log_info("HMC reset complete")
 
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def cmos_clear(self, timeout: int = 1200, last_reboot=None):
         """CMOS clear"""
         cmd = "bic-util %s 0xe0 0x25 0x15 0xa0 0x00" % self.get_slot_info()
@@ -566,6 +593,7 @@ class BMC:
         )
         self.post_cycle_check()
 
+    # pyre-fixme[2]: Parameter must be annotated.
     def post_cycle_check(self, filter_errors=None) -> None:
         """Check post_cycle"""
         return

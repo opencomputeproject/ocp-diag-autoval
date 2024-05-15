@@ -18,7 +18,12 @@ from autoval.lib.utils.autoval_exceptions import TestError
 from autoval.lib.utils.autoval_log import AutovalLog
 
 
+# pyre-fixme[3]: Return type must be annotated.
+# pyre-fixme[2]: Parameter must be annotated.
 def log(func):
+    # pyre-fixme[53]: Captured variable `func` is not annotated.
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def wrap(*args, **kwargs):
         # Call the original function
         ret_val = func(*args, **kwargs)
@@ -35,7 +40,9 @@ def log(func):
 class GenericUtils:
     @staticmethod
     def extract(
+        # pyre-fixme[2]: Parameter must be annotated.
         file_path_to_extract,
+        # pyre-fixme[2]: Parameter must be annotated.
         directory_to_extract_to,
         omit_archive_top_directory: bool = False,
     ) -> None:
@@ -100,6 +107,7 @@ class GenericUtils:
                 file_opener.close()
 
     @staticmethod
+    # pyre-fixme[2]: Parameter must be annotated.
     def gzip_file(source, target_file) -> None:
         # traceback.print_stack()
         with open(source, "rb") as orig_file:
@@ -107,6 +115,8 @@ class GenericUtils:
                 zipped_file.writelines(orig_file)
 
     @staticmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def create_dir(path, force_recreate: bool = False):
         """
         Create directory path.
@@ -127,6 +137,7 @@ class GenericUtils:
         return path
 
     @staticmethod
+    # pyre-fixme[2]: Parameter must be annotated.
     def delete_file(path) -> None:
         """
         @param path: Path to delete
@@ -142,6 +153,8 @@ class GenericUtils:
             raise ("file {} is not a file or dir.".format(path))
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def convert_to_ascii(cls, dic):
         """Removes all special characters from the provided nested structure
         and return the structure which is safe to perform json.dump.
@@ -162,6 +175,8 @@ class GenericUtils:
                 return dic
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def flatten_dict(cls, d, prefix: str = ""):
         """
         Transform a nested dict of lists into a flat dict
@@ -182,6 +197,7 @@ class GenericUtils:
         return values
 
     @classmethod
+    # pyre-fixme[2]: Parameter must be annotated.
     def csv_to_json(cls, file_path) -> str:
         # traceback.print_stack()
         json_dump = {}
@@ -192,6 +208,8 @@ class GenericUtils:
         return json_dump
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def parse_csv(cls, file_paths):
         # traceback.print_stack()
         results = {}
@@ -214,11 +232,14 @@ class GenericUtils:
                         continue
                     # Start at row[1] to skip job name, which we use as the key
                     for i, item in enumerate(row[1:]):
+                        # pyre-fixme[61]: `headers` is undefined, or not always defined.
                         key = row[0] + ":" + headers[i + 1]
                         results[key] = item
         return results
 
     @staticmethod
+    # pyre-fixme[24]: Generic type `dict` expects 2 type parameters, use
+    #  `typing.Dict[<key type>, <value type>]` to avoid runtime subscripting errors.
     def read_resource_cfg(file_path: str, module: str = "autoval") -> Dict:
         """This function reads the resource json config file and returns the dictionary.
         If the file does not exist, it raises FileNotFoundError
@@ -249,6 +270,8 @@ class GenericUtils:
             raise FileNotFoundError(f"Config file {absolute_file_path} does not exist")
 
     @staticmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def recursive_file_list(root):
         """
         Method to walk over the root directory hierarchy and return the
@@ -262,6 +285,8 @@ class GenericUtils:
         return path_list
 
     @staticmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def strtobool(val):
         """Convert a string representation of truth to true (1) or false (0).
 
@@ -279,6 +304,8 @@ class GenericUtils:
             raise ValueError("invalid truth value %r" % (val,))
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def loads_json(cls, _str, msg=None):
         """
         Wrapper for json.loads
@@ -295,6 +322,8 @@ class GenericUtils:
             raise TestError("JSON load failed. {}Error: {}".format(msg, e))
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def read_file(cls, file_path):
         """
         Reads a .gz (gzip) or regular file and returns its content as a string
@@ -311,6 +340,8 @@ class GenericUtils:
         return content
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def match_in_file(cls, file_path, regex_dict):
         """
         Returns a dictionary of matched values in a file.
@@ -322,6 +353,8 @@ class GenericUtils:
         return cls.match_string(f_str, regex_dict)
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def match_string(cls, string, regex_dict):
         """
         Returns a dictionary of matched values in a string
@@ -365,6 +398,10 @@ class GenericUtils:
         return retDict
 
     @classmethod
+    # pyre-fixme[24]: Generic type `dict` expects 2 type parameters, use
+    #  `typing.Dict[<key type>, <value type>]` to avoid runtime subscripting errors.
+    # pyre-fixme[24]: Generic type `list` expects 1 type parameter, use
+    #  `typing.List[<element type>]` to avoid runtime subscripting errors.
     def filter_dict_keys(cls, data: Dict, keys: List) -> Dict:
         """
         Created a sub dictionary from a given nested dict,
@@ -400,6 +437,9 @@ class GenericUtils:
         return re.sub(r"[^a-zA-Z0-9\.\-\_]", "_", hostname)
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[24]: Generic type `dict` expects 2 type parameters, use
+    #  `typing.Dict[<key type>, <value type>]` to avoid runtime subscripting errors.
     def evaluate_expression(cls, expr: str, expr_args: Optional[dict] = None):
         """Takes expression string, converts to AST
         and evaluates the ast nodes
@@ -415,6 +455,10 @@ class GenericUtils:
             raise
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
+    # pyre-fixme[24]: Generic type `dict` expects 2 type parameters, use
+    #  `typing.Dict[<key type>, <value type>]` to avoid runtime subscripting errors.
     def ast_expr_evaluate(cls, ast_node, expr_args: Optional[dict] = None):
         """Takes abstract syntax tree of an expression, evaluates and returns the value
         Sample tree inside an ast node for an expression 10+2*8
@@ -453,6 +497,7 @@ class GenericUtils:
             return None
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def is_float(cls, _str):
         # traceback.print_stack()
         try:

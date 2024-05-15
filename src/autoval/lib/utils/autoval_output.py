@@ -4,6 +4,7 @@ import threading
 import typing as ty
 
 
+# pyre-fixme[5]: Global expression must be annotated.
 _version = (
     (float)(sys.version_info[0])
     + (0.1 * (float)(sys.version_info[1]))
@@ -23,6 +24,7 @@ try:
             Writer,
         )
 
+        # pyre-fixme[5]: Global expression must be annotated.
         OPERATION_OCP_VALIDATOR_MAP = {
             "isEqual": ValidatorType.EQUAL,
             "isNotEqual": ValidatorType.NOT_EQUAL,
@@ -36,6 +38,7 @@ try:
             "isNotException": ValidatorType.EQUAL,
         }
 
+        # pyre-fixme[5]: Global expression must be annotated.
         LOG_LEVEL_MAP = {
             "INFO": LogSeverity.INFO,
             "ERROR": LogSeverity.ERROR,
@@ -58,7 +61,9 @@ class Verdict:
 class AutovalOutput:
     """Class to handle output for Autoval tests"""
 
+    # pyre-fixme[4]: Attribute must be annotated.
     run = None
+    # pyre-fixme[4]: Attribute must be annotated.
     ocp_diag_enabled = None
 
     @staticmethod
@@ -81,6 +86,8 @@ class AutovalOutput:
         return AutovalOutput.ocp_diag_enabled
 
     @staticmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def start_test_run(test):
         """Start a new test run.
 
@@ -98,6 +105,8 @@ class AutovalOutput:
         AutovalOutput.run.start(dut=dut)
 
     @staticmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def end_test_run(test):
         """End the current test run.
 
@@ -121,6 +130,8 @@ class AutovalOutput:
         FileActions.copy_from_local(None, source_path, target_path)
 
     @staticmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def add_measurement(name, value):
         """Add a measurement to the current test step.
 
@@ -137,6 +148,8 @@ class AutovalOutput:
         run_step.end(status=TestStatus.COMPLETE)
 
     @staticmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def add_test_step(**kwargs):
         """Add a test step to the current test run.
 
@@ -189,6 +202,8 @@ class AutovalOutput:
         run_step.end(status=TestStatus.COMPLETE)
 
     @staticmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def log(severity, msg):
         """Log a message with the specified severity.
 
@@ -201,6 +216,8 @@ class AutovalOutput:
         AutovalOutput._add_run_log(LOG_LEVEL_MAP[severity], msg)
 
     @staticmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def _add_run_log(severity, msg):
         """Add a log message to the current test run.
 
@@ -216,6 +233,7 @@ class AutovalOutput:
             pass
 
     @staticmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def get_test_output_file_path():
         """Get the path to the output file for the current test run.
 
@@ -228,6 +246,7 @@ class AutovalOutput:
         return os.path.join(path, OUTPUT_FILE)
 
     @staticmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def _get_test_output_file_writer():
         """Get a writer object for writing to the output file.
 

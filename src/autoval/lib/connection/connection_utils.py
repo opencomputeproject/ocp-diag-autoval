@@ -28,10 +28,15 @@ class ConnectionUtils:
     @classmethod
     def log_cmdlog(
         cls,
+        # pyre-fixme[2]: Parameter must be annotated.
         hostname,
+        # pyre-fixme[2]: Parameter must be annotated.
         cmd,
+        # pyre-fixme[2]: Parameter must be annotated.
         return_code,
+        # pyre-fixme[2]: Parameter must be annotated.
         output,
+        # pyre-fixme[2]: Parameter must be annotated.
         custom_logfile=None,
     ) -> None:
 

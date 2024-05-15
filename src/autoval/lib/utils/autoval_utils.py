@@ -56,11 +56,17 @@ MAX_THREADS = 8
 
 class CmdResult:
     def __init__(
-        self, command: str = "", stdout: str = "", stderr: str = "", return_code=None
+        self,
+        command: str = "",
+        stdout: str = "",
+        stderr: str = "",
+        # pyre-fixme[2]: Parameter must be annotated.
+        return_code=None,
     ) -> None:
         self.command = command
         self.stdout = stdout
         self.stderr = stderr
+        # pyre-fixme[4]: Attribute must be annotated.
         self.return_code = return_code
 
     def __str__(self) -> str:
@@ -71,15 +77,20 @@ class CmdResult:
 
 class AutovalUtils:
 
+    # pyre-fixme[4]: Attribute must be annotated.
     _host = None
 
     _test_step = 1
     _test_stage = "setup"
+    # pyre-fixme[4]: Attribute must be annotated.
     _failed_test_steps = []
+    # pyre-fixme[4]: Attribute must be annotated.
     _passed_test_steps = []
+    # pyre-fixme[4]: Attribute must be annotated.
     _warning_steps = []
 
     result_handler = ResultHandler()
+    # pyre-fixme[4]: Attribute must be annotated.
     components = {
         "ASIC": COMPONENT.ASIC,
         "BIOS": COMPONENT.BIOS,
@@ -90,6 +101,7 @@ class AutovalUtils:
     }
 
     @classmethod
+    # pyre-fixme[2]: Parameter must be annotated.
     def _set_host(cls, host) -> None:
         """
         Local function to be called only from autoval_utils
@@ -98,6 +110,7 @@ class AutovalUtils:
         cls._host = host
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def _get_host(cls):
         """
         Local function to be called only from autoval_utils
@@ -105,6 +118,8 @@ class AutovalUtils:
         return cls._host
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def get_host_from_hostname(cls, hostname, hosts):
         """
         Get the Host obj from Hostname
@@ -119,11 +134,15 @@ class AutovalUtils:
         )
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def get_host_dict(cls, host):
         # traceback.print_stack()
         return host.host_dict
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def run_on_host(cls, host, function, *args, **kwargs):
         """
         To run a function in the given host,
@@ -141,6 +160,7 @@ class AutovalUtils:
             cls._set_host(handler)
 
     @classmethod
+    # pyre-fixme[2]: Parameter must be annotated.
     def check_and_extract_files_to_host(cls, host, source_binary, dut_dir) -> None:
         # Check if the firmware binaries are already extracted. if not, extract
         # it independent of the compression type i.e .tgz, .tar.gz, .zip etc
@@ -167,6 +187,8 @@ class AutovalUtils:
         return False
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def loads_json(cls, _str, msg=None):
         """
         Wrapper for json.loads
@@ -183,11 +205,13 @@ class AutovalUtils:
             raise TestError(f"JSON load failed of '{_str}', msg: {msg}. Error: {e}")
 
     @classmethod
+    # pyre-fixme[2]: Parameter must be annotated.
     def raise_process_timeout(cls, process, cmd, timeout, queue) -> None:
         queue.put("Command [%s] timed out after [%d] seconds" % (cmd, timeout))
         cls.kill_proc_family(process)
 
     @classmethod
+    # pyre-fixme[2]: Parameter must be annotated.
     def kill_proc_family(cls, process) -> None:
         # Kill process and all child processes
         sig = signal.SIGKILL
@@ -204,6 +228,8 @@ class AutovalUtils:
                 pass
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def _get_child_procs(cls, pid):
         cmd = "ps -o pid --ppid %d --noheaders" % (pid)
         out = cls.run_get_output(cmd, timeout=None)
@@ -212,7 +238,11 @@ class AutovalUtils:
 
     @classmethod
     def _run_subprocess(
-        cls, cmd: str, timeout=None, background: bool = False
+        cls,
+        cmd: str,
+        # pyre-fixme[2]: Parameter must be annotated.
+        timeout=None,
+        background: bool = False,
     ) -> CmdResult:
         cmd = shlex.quote(cmd)
         # pyre-fixme[9]: cmd has type `str`; used as `List[str]`.
@@ -255,6 +285,8 @@ class AutovalUtils:
         )
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def _communicate(cls, process):
         proc_stdout, proc_stderr = process.communicate()
         proc_stdout = proc_stdout.decode("utf-8", "ignore")
@@ -262,14 +294,18 @@ class AutovalUtils:
         return (proc_stdout, proc_stderr, process.returncode)
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def _run(
         cls,
         cmd: str,
         get_return_code: bool = False,
         ignore_status: bool = False,
+        # pyre-fixme[2]: Parameter must be annotated.
         timeout=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         working_directory=None,
         background: bool = False,
+        # pyre-fixme[2]: Parameter must be annotated.
         custom_logfile=None,
     ):
         if cls.run_remotely():
@@ -322,9 +358,12 @@ class AutovalUtils:
         cmd: str,
         get_return_code: bool = False,
         ignore_status: bool = False,
+        # pyre-fixme[2]: Parameter must be annotated.
         timeout=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         working_directory=None,
         background: bool = False,
+        # pyre-fixme[2]: Parameter must be annotated.
         custom_logfile=None,
         hostname: str = "localhost",
     ) -> CmdResult:
@@ -373,14 +412,19 @@ class AutovalUtils:
         return result
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def run_get_output(
         cls,
+        # pyre-fixme[2]: Parameter must be annotated.
         cmd,
         ignore_status: bool = False,
+        # pyre-fixme[2]: Parameter must be annotated.
         timeout=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         working_directory=None,
         get_return_code: bool = False,
         background: bool = False,
+        # pyre-fixme[2]: Parameter must be annotated.
         custom_logfile=None,
     ):
         """
@@ -411,6 +455,8 @@ class AutovalUtils:
         return result.stdout.rstrip()
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def try_run_get_output(cls, cmd, ignore_status: bool = False):
         """
         Tries to run given cmd with verbose set to False
@@ -424,8 +470,20 @@ class AutovalUtils:
             pass
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def run_remote_module(
-        cls, module, method, params=None, class_name=None, timeout: int = 600, host=None
+        cls,
+        # pyre-fixme[2]: Parameter must be annotated.
+        module,
+        # pyre-fixme[2]: Parameter must be annotated.
+        method,
+        # pyre-fixme[2]: Parameter must be annotated.
+        params=None,
+        # pyre-fixme[2]: Parameter must be annotated.
+        class_name=None,
+        timeout: int = 600,
+        # pyre-fixme[2]: Parameter must be annotated.
+        host=None,
     ):
         """
         Runs a module in the validation_utils/modules directory.
@@ -445,6 +503,9 @@ class AutovalUtils:
         )
 
     @classmethod
+    # pyre-fixme[2]: Parameter must be annotated.
+    # pyre-fixme[24]: Generic type `list` expects 1 type parameter, use
+    #  `typing.List[<element type>]` to avoid runtime subscripting errors.
     def run(cls, hosts, func, *args, max_workers=MAX_THREADS) -> Tuple[List, List]:
         """
         Runs the passed method on the list of hosts provided.
@@ -495,8 +556,17 @@ class AutovalUtils:
         return (output, errs)
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def compare_configs(
-        cls, first, second, difference_allowed=None, deviation_allowed=None
+        cls,
+        # pyre-fixme[2]: Parameter must be annotated.
+        first,
+        # pyre-fixme[2]: Parameter must be annotated.
+        second,
+        # pyre-fixme[2]: Parameter must be annotated.
+        difference_allowed=None,
+        # pyre-fixme[2]: Parameter must be annotated.
+        deviation_allowed=None,
     ):
         """
         Compares 2 configuration dicts.
@@ -556,6 +626,8 @@ class AutovalUtils:
         return diff
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def trim_expected_actual_diffs(cls, expected, actual):
         """
         This function compares the expected/actual data and
@@ -646,21 +718,36 @@ class AutovalUtils:
         except Exception as err:
             AutovalLog.log_debug(
                 "Ignoring invalid values: {}\nexpected: {}\nactual: {}".format(
-                    err, exp, act
+                    err,
+                    # pyre-fixme[61]: `exp` is undefined, or not always defined.
+                    exp,
+                    # pyre-fixme[61]: `act` is undefined, or not always defined.
+                    act,
                 )
             )
+        # pyre-fixme[61]: `expected_str_repr` is undefined, or not always defined.
         exp = (str(exp) if expected_str_repr else exp) if exp else None
+        # pyre-fixme[61]: `actual_str_repr` is undefined, or not always defined.
         act = (str(act) if actual_str_repr else act) if act else None
         return exp, act
 
     @classmethod
+    # pyre-fixme[30]: Pyre gave up inferring some types - function `diff_configs`
+    #  was too complex.
+    # pyre-fixme[3]: Return type must be annotated.
     def diff_configs(
         cls,
+        # pyre-fixme[2]: Parameter must be annotated.
         first,
+        # pyre-fixme[2]: Parameter must be annotated.
         second,
+        # pyre-fixme[2]: Parameter must be annotated.
         difference_allowed=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         deviation_allowed=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         parents=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         diffs=None,
     ):
         """
@@ -699,8 +786,12 @@ class AutovalUtils:
                     current_answer = created_diff
                 parents.pop()
                 if not diffs:
+                    # pyre-fixme[61]: `created_diff` is undefined, or not always
+                    #  defined.
                     diffs.update(created_diff)
                 else:
+                    # pyre-fixme[61]: `created_diff` is undefined, or not always
+                    #  defined.
                     cls.merge_nested_dict(diffs, created_diff, parents)
             else:
                 found_diff = False
@@ -773,8 +864,12 @@ class AutovalUtils:
                                     current_answer = created_diff
                                 parents.pop()
                                 if not diffs:
+                                    # pyre-fixme[61]: `created_diff` is undefined,
+                                    #  or not always defined.
                                     diffs.update(created_diff)
                                 else:
+                                    # pyre-fixme[61]: `created_diff` is undefined,
+                                    #  or not always defined.
                                     cls.merge_nested_dict(diffs, created_diff, parents)
                             else:
                                 diffs.update({key: [expected, actual]})
@@ -790,12 +885,18 @@ class AutovalUtils:
                     current_answer = created_diff
                 parents.pop()
                 if not diffs:
+                    # pyre-fixme[61]: `created_diff` is undefined, or not always
+                    #  defined.
                     diffs.update(created_diff)
                 else:
+                    # pyre-fixme[61]: `created_diff` is undefined, or not always
+                    #  defined.
                     cls.merge_nested_dict(diffs, created_diff, parents)
         return diffs
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def merge_nested_dict(cls, diffs, created_diff, parents):
         """
         This function becomes necessary when the diffs and created_diffs are
@@ -848,6 +949,8 @@ class AutovalUtils:
         return diffs.update(created_diff)
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def add_dict_key_prefix(cls, old_dict, prefix):
         # traceback.print_stack()
         new_dict = {}
@@ -859,17 +962,25 @@ class AutovalUtils:
     @classmethod
     def _validate(
         cls,
+        # pyre-fixme[2]: Parameter must be annotated.
         did_pass,
         msg: str,
+        # pyre-fixme[2]: Parameter must be annotated.
         identifier=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         actual=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         expected=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         operation=None,
         raise_on_fail: bool = True,
         log_on_pass: bool = True,
+        # pyre-fixme[2]: Parameter must be annotated.
         on_fail=None,
         warning: bool = False,
+        # pyre-fixme[2]: Parameter must be annotated.
         component=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         error_type=None,
         name: Optional[str] = None,
         verdict: Optional[str] = None,
@@ -939,8 +1050,11 @@ class AutovalUtils:
     @classmethod
     def _on_fail(
         cls,
+        # pyre-fixme[2]: Parameter must be annotated.
         on_fail,
+        # pyre-fixme[2]: Parameter must be annotated.
         msg,
+        # pyre-fixme[2]: Parameter must be annotated.
         identifier,
         raise_on_fail: bool,
         log_on_pass: bool,
@@ -962,15 +1076,21 @@ class AutovalUtils:
     @classmethod
     def _get_validation_msg(
         cls,
+        # pyre-fixme[2]: Parameter must be annotated.
         did_pass,
         msg: str,
+        # pyre-fixme[2]: Parameter must be annotated.
         identifier,
         actual: str,
         expected: str,
+        # pyre-fixme[2]: Parameter must be annotated.
         operation,
+        # pyre-fixme[2]: Parameter must be annotated.
         step,
         warning: bool = False,
+        # pyre-fixme[2]: Parameter must be annotated.
         component=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         error_type=None,
     ) -> str:
         # Get the concise summary of actual and expected diff
@@ -1013,14 +1133,19 @@ class AutovalUtils:
     @classmethod
     def validate_condition(
         cls,
+        # pyre-fixme[2]: Parameter must be annotated.
         condition,
         msg: str,
+        # pyre-fixme[2]: Parameter must be annotated.
         identifier=None,
         raise_on_fail: bool = True,
         log_on_pass: bool = True,
+        # pyre-fixme[2]: Parameter must be annotated.
         on_fail=None,
         warning: bool = False,
+        # pyre-fixme[2]: Parameter must be annotated.
         component=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         error_type=None,
         name: Optional[str] = None,
         verdict: Optional[str] = None,
@@ -1054,13 +1179,17 @@ class AutovalUtils:
     @classmethod
     def validate_empty_list(
         cls,
+        # pyre-fixme[2]: Parameter must be annotated.
         validate_list,
         msg: str,
+        # pyre-fixme[2]: Parameter must be annotated.
         identifier=None,
         raise_on_fail: bool = True,
         log_on_pass: bool = True,
         warning: bool = False,
+        # pyre-fixme[2]: Parameter must be annotated.
         component=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         error_type=None,
         name: Optional[str] = None,
         verdict: Optional[str] = None,
@@ -1089,13 +1218,17 @@ class AutovalUtils:
     @classmethod
     def validate_non_empty_list(
         cls,
+        # pyre-fixme[2]: Parameter must be annotated.
         validate_list,
         msg: str,
+        # pyre-fixme[2]: Parameter must be annotated.
         identifier=None,
         raise_on_fail: bool = True,
         log_on_pass: bool = True,
         warning: bool = False,
+        # pyre-fixme[2]: Parameter must be annotated.
         component=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         error_type=None,
         name: Optional[str] = None,
         verdict: Optional[str] = None,
@@ -1125,14 +1258,19 @@ class AutovalUtils:
     @classmethod
     def validate_equal(
         cls,
+        # pyre-fixme[2]: Parameter must be annotated.
         actual,
+        # pyre-fixme[2]: Parameter must be annotated.
         expected,
         msg: str,
+        # pyre-fixme[2]: Parameter must be annotated.
         identifier=None,
         raise_on_fail: bool = True,
         log_on_pass: bool = True,
         warning: bool = False,
+        # pyre-fixme[2]: Parameter must be annotated.
         component=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         error_type=None,
         name: Optional[str] = None,
         verdict: Optional[str] = None,
@@ -1161,14 +1299,19 @@ class AutovalUtils:
     @classmethod
     def validate_not_equal(
         cls,
+        # pyre-fixme[2]: Parameter must be annotated.
         actual,
+        # pyre-fixme[2]: Parameter must be annotated.
         expected,
         msg: str,
+        # pyre-fixme[2]: Parameter must be annotated.
         identifier=None,
         raise_on_fail: bool = True,
         log_on_pass: bool = True,
         warning: bool = False,
+        # pyre-fixme[2]: Parameter must be annotated.
         component=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         error_type=None,
         name: Optional[str] = None,
         verdict: Optional[str] = None,
@@ -1194,15 +1337,21 @@ class AutovalUtils:
     @classmethod
     def validate_range(
         cls,
+        # pyre-fixme[2]: Parameter must be annotated.
         actual,
+        # pyre-fixme[2]: Parameter must be annotated.
         lower_limit,
+        # pyre-fixme[2]: Parameter must be annotated.
         upper_limit,
         msg: str,
+        # pyre-fixme[2]: Parameter must be annotated.
         identifier=None,
         raise_on_fail: bool = True,
         log_on_pass: bool = True,
         warning: bool = False,
+        # pyre-fixme[2]: Parameter must be annotated.
         component=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         error_type=None,
     ) -> None:
         cls._validate(
@@ -1222,15 +1371,22 @@ class AutovalUtils:
     @classmethod
     def validate_less(
         cls,
+        # pyre-fixme[2]: Parameter must be annotated.
         actual,
+        # pyre-fixme[2]: Parameter must be annotated.
         expected,
+        # pyre-fixme[2]: Parameter must be annotated.
         msg,
+        # pyre-fixme[2]: Parameter must be annotated.
         identifier=None,
         raise_on_fail: bool = True,
         log_on_pass: bool = True,
         warning: bool = False,
+        # pyre-fixme[2]: Parameter must be annotated.
         component=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         error_type=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         variance=None,
         name: Optional[str] = None,
         verdict: Optional[str] = None,
@@ -1256,15 +1412,22 @@ class AutovalUtils:
     @classmethod
     def validate_less_equal(
         cls,
+        # pyre-fixme[2]: Parameter must be annotated.
         actual,
+        # pyre-fixme[2]: Parameter must be annotated.
         expected,
+        # pyre-fixme[2]: Parameter must be annotated.
         msg,
+        # pyre-fixme[2]: Parameter must be annotated.
         identifier=None,
         raise_on_fail: bool = True,
         log_on_pass: bool = True,
         warning: bool = False,
+        # pyre-fixme[2]: Parameter must be annotated.
         component=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         error_type=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         variance=None,
         name: Optional[str] = None,
         verdict: Optional[str] = None,
@@ -1290,15 +1453,22 @@ class AutovalUtils:
     @classmethod
     def validate_greater(
         cls,
+        # pyre-fixme[2]: Parameter must be annotated.
         actual,
+        # pyre-fixme[2]: Parameter must be annotated.
         expected,
+        # pyre-fixme[2]: Parameter must be annotated.
         msg,
+        # pyre-fixme[2]: Parameter must be annotated.
         identifier=None,
         raise_on_fail: bool = True,
         log_on_pass: bool = True,
         warning: bool = False,
+        # pyre-fixme[2]: Parameter must be annotated.
         component=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         error_type=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         variance=None,
         name: Optional[str] = None,
         verdict: Optional[str] = None,
@@ -1324,15 +1494,22 @@ class AutovalUtils:
     @classmethod
     def validate_greater_equal(
         cls,
+        # pyre-fixme[2]: Parameter must be annotated.
         actual,
+        # pyre-fixme[2]: Parameter must be annotated.
         expected,
+        # pyre-fixme[2]: Parameter must be annotated.
         msg,
+        # pyre-fixme[2]: Parameter must be annotated.
         identifier=None,
         raise_on_fail: bool = True,
         log_on_pass: bool = True,
         warning: bool = False,
+        # pyre-fixme[2]: Parameter must be annotated.
         component=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         error_type=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         variance=None,
         name: Optional[str] = None,
         verdict: Optional[str] = None,
@@ -1358,14 +1535,20 @@ class AutovalUtils:
     @classmethod
     def validate_type(
         cls,
+        # pyre-fixme[2]: Parameter must be annotated.
         obj,
+        # pyre-fixme[2]: Parameter must be annotated.
         obj_type,
+        # pyre-fixme[2]: Parameter must be annotated.
         msg,
+        # pyre-fixme[2]: Parameter must be annotated.
         identifier=None,
         raise_on_fail: bool = True,
         log_on_pass: bool = True,
         warning: bool = False,
+        # pyre-fixme[2]: Parameter must be annotated.
         component=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         error_type=None,
         name: Optional[str] = None,
         verdict: Optional[str] = None,
@@ -1387,16 +1570,22 @@ class AutovalUtils:
         )
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def validate_regex_match(
         cls,
+        # pyre-fixme[2]: Parameter must be annotated.
         regex,  # type - SRE_Pattern object returned from re.compile()
+        # pyre-fixme[2]: Parameter must be annotated.
         string,  # type - str string to apply regex to
         msg: str,  # type - str message to raise
+        # pyre-fixme[2]: Parameter must be annotated.
         identifier=None,  # type - Optional[str]
         raise_on_fail: bool = True,  # type - bool
         log_on_pass: bool = True,  # type - bool
         warning: bool = False,  # type - bool
+        # pyre-fixme[2]: Parameter must be annotated.
         component=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         error_type=None,
         name: Optional[str] = None,
         verdict: Optional[str] = None,
@@ -1425,14 +1614,19 @@ class AutovalUtils:
     @classmethod
     def validate_regex_no_match(
         cls,
+        # pyre-fixme[2]: Parameter must be annotated.
         regex,  # type -  SRE_Pattern object returned from re.compile()
+        # pyre-fixme[2]: Parameter must be annotated.
         string,  # type -  str string to apply regex to
         msg: str,  # type - str message to raise
+        # pyre-fixme[2]: Parameter must be annotated.
         identifier=None,  # type - Optional[str]
         raise_on_fail: bool = True,  # type - bool
         log_on_pass: bool = True,  # type - bool
         warning: bool = False,
+        # pyre-fixme[2]: Parameter must be annotated.
         component=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         error_type=None,
         name: Optional[str] = None,
         verdict: Optional[str] = None,
@@ -1460,16 +1654,23 @@ class AutovalUtils:
     @classmethod
     def _validate_lt_gt_eq(
         cls,
+        # pyre-fixme[2]: Parameter must be annotated.
         actual,
+        # pyre-fixme[2]: Parameter must be annotated.
         expected,
         msg: str,
+        # pyre-fixme[2]: Parameter must be annotated.
         comparison,
+        # pyre-fixme[2]: Parameter must be annotated.
         identifier=None,
         raise_on_fail: bool = True,
         log_on_pass: bool = True,
         warning: bool = False,
+        # pyre-fixme[2]: Parameter must be annotated.
         component=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         error_type=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         variance=None,
         name: Optional[str] = None,
         verdict: Optional[str] = None,
@@ -1512,14 +1713,19 @@ class AutovalUtils:
     @classmethod
     def validate_in(
         cls,
+        # pyre-fixme[2]: Parameter must be annotated.
         item,
+        # pyre-fixme[2]: Parameter must be annotated.
         container,
         msg: str,
+        # pyre-fixme[2]: Parameter must be annotated.
         identifier=None,
         raise_on_fail: bool = True,
         log_on_pass: bool = True,
         warning: bool = False,
+        # pyre-fixme[2]: Parameter must be annotated.
         component=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         error_type=None,
         name: Optional[str] = None,
         verdict: Optional[str] = None,
@@ -1549,14 +1755,19 @@ class AutovalUtils:
     @classmethod
     def validate_not_in(
         cls,
+        # pyre-fixme[2]: Parameter must be annotated.
         item,
+        # pyre-fixme[2]: Parameter must be annotated.
         container,
         msg: str,
+        # pyre-fixme[2]: Parameter must be annotated.
         identifier=None,
         raise_on_fail: bool = True,
         log_on_pass: bool = True,
         warning: bool = False,
+        # pyre-fixme[2]: Parameter must be annotated.
         component=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         error_type=None,
         name: Optional[str] = None,
         verdict: Optional[str] = None,
@@ -1584,16 +1795,22 @@ class AutovalUtils:
         )
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def validate_no_exception(
         cls,
+        # pyre-fixme[2]: Parameter must be annotated.
         code_ref,
+        # pyre-fixme[2]: Parameter must be annotated.
         param_list,
         msg: str,
+        # pyre-fixme[2]: Parameter must be annotated.
         identifier=None,
         raise_on_fail: bool = True,
         log_on_pass: bool = True,
         warning: bool = False,
+        # pyre-fixme[2]: Parameter must be annotated.
         component=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         error_type=None,
         name: Optional[str] = None,
         verdict: Optional[str] = None,
@@ -1639,15 +1856,22 @@ class AutovalUtils:
             return result
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def validate_exception(
         cls,
+        # pyre-fixme[2]: Parameter must be annotated.
         code_ref,
+        # pyre-fixme[2]: Parameter must be annotated.
         param_list,
         msg: str,
+        # pyre-fixme[2]: Parameter must be annotated.
         exception_type=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         identifier=None,
         warning: bool = False,
+        # pyre-fixme[2]: Parameter must be annotated.
         component=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         error_type=None,
         name: Optional[str] = None,
         verdict: Optional[str] = None,
@@ -1694,6 +1918,8 @@ class AutovalUtils:
             return result
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def process_nested_diff(cls, diff, key=None, key_str: str = "["):
         """
         sample diff when there is a difference between start and end_config
@@ -1721,6 +1947,8 @@ class AutovalUtils:
             return cls.process_nested_diff(diff[key], _key, key_str)
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def split_nested(cls, config, key, list_=None, parents=None):
         """
         This function is required when the diff it nested.
@@ -1768,6 +1996,7 @@ class AutovalUtils:
                 dict_ = {parent: value}
                 value = dict_
             parents.pop()
+            # pyre-fixme[61]: `dict_` is undefined, or not always defined.
             list_.append(dict_)
         elif isinstance(config[key], dict):
             parents.append(key)
@@ -1778,6 +2007,8 @@ class AutovalUtils:
         return list_
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def get_concise_step_log(cls, log_line):
         """
         This function trims the log to a concised summary.
@@ -1825,6 +2056,8 @@ class AutovalUtils:
         return log_line
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def _get_expected_actual_snapshot(cls, expected, actual):
         """
         This function gets the snapshot of expected and actual data
@@ -1839,13 +2072,17 @@ class AutovalUtils:
     @classmethod
     def validate_empty_diff(
         cls,
+        # pyre-fixme[2]: Parameter must be annotated.
         diffs,
         msg: str,
         raise_on_fail: bool = True,
         log_on_pass: bool = True,
         warning: bool = False,
+        # pyre-fixme[2]: Parameter must be annotated.
         config_errors=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         component=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         error_type=None,
         name: Optional[str] = None,
         verdict: Optional[str] = None,
@@ -1910,6 +2147,8 @@ class AutovalUtils:
         return
 
     @staticmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def to_string(obj):
         # traceback.print_stack()
         """Convert an object to a string"""
@@ -1929,15 +2168,23 @@ class AutovalUtils:
     @classmethod
     def add_test_step_result(
         cls,
+        # pyre-fixme[2]: Parameter must be annotated.
         did_pass,
         msg: str,
+        # pyre-fixme[2]: Parameter must be annotated.
         identifier,
+        # pyre-fixme[2]: Parameter must be annotated.
         actual,
+        # pyre-fixme[2]: Parameter must be annotated.
         expected,
+        # pyre-fixme[2]: Parameter must be annotated.
         operation,
+        # pyre-fixme[2]: Parameter must be annotated.
         raise_on_fail,
         warning: bool = False,
+        # pyre-fixme[2]: Parameter must be annotated.
         component=None,
+        # pyre-fixme[2]: Parameter must be annotated.
         error_type=None,
     ) -> int:
         """
@@ -1999,6 +2246,7 @@ class AutovalUtils:
         return step_number
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def get_failed_test_steps(cls):
         return cls._failed_test_steps
 
@@ -2007,10 +2255,12 @@ class AutovalUtils:
         cls._failed_test_steps = []
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def get_passed_test_steps(cls):
         return cls._passed_test_steps
 
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
     def get_warning_steps(cls):
         return cls._warning_steps
 
@@ -2043,6 +2293,8 @@ class AutovalUtils:
     # This function gives first match found with regex passed as argument for
     # given command
     @classmethod
+    # pyre-fixme[3]: Return type must be annotated.
+    # pyre-fixme[2]: Parameter must be annotated.
     def run_get_match(cls, reg_ex, cmd):
         # traceback.print_stack()
         output = cls.run_get_output(cmd)
