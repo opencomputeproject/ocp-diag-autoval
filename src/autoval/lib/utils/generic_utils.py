@@ -240,7 +240,7 @@ class GenericUtils:
     @staticmethod
     # pyre-fixme[24]: Generic type `dict` expects 2 type parameters, use
     #  `typing.Dict[<key type>, <value type>]` to avoid runtime subscripting errors.
-    def read_resource_cfg(file_path: str, module: str = "autoval", autoval_oss_path: str = "") -> Dict:
+    def read_resource_cfg(file_path: str, module: str = "autoval") -> Dict:
         """This function reads the resource json config file and returns the dictionary.
         If the file does not exist, it raises FileNotFoundError
 
@@ -259,10 +259,7 @@ class GenericUtils:
             FileNotFoundError: If resource config file does not exist
         """
         # traceback.print_stack()
-        try:
-            absolute_file_path = pkg_resources.resource_filename(module, file_path)
-        except TypeError:
-            absolute_file_path = autoval_oss_path + "/" + file_path
+        absolute_file_path = pkg_resources.resource_filename(module, file_path)
         AutovalLog.log_debug(
             f"Relative path from {module}: {file_path}, Resolved absolute resource cfg file path: {absolute_file_path}"
         )
