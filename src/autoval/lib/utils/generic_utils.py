@@ -244,13 +244,13 @@ class GenericUtils:
         """This function reads the resource json config file and returns the dictionary.
         If the file does not exist, it raises FileNotFoundError
 
-        Assume that we want to read a file located at havoc/autoval/cfg/site_settings/site_settings.json,
+        Assume that we want to read a file located at autoval/cfg/site_settings/site_settings.json,
         To read this file, caller can call this API as below
-        read_resource_file(file_path="cfg/site_settings/site_settings.json", module="havoc.autoval")
+        read_resource_file(file_path="cfg/site_settings/site_settings.json", module="autoval")
 
         Args:
             file_path: The relative file path from the module directory
-            module: The module name. It must be a valid python package. Default Value : havoc.autoval
+            module: The module name. It must be a valid python package. Default Value :autoval
 
         Returns:
             Resource config file content

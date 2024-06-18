@@ -302,15 +302,7 @@ class TestBase:
 
         self._process_test_result()
         self.result_handler.print_test_summary()
-        self.print_loaded_modules()
-
-    def print_loaded_modules(self) -> None:
-        """Print loaded modules"""
-        modules = sorted(
-            module for module in sys.modules.keys() if module.startswith("autoval")
-        )
-        logging.info(f"Loaded Modules: {modules}")
-
+        
     def _host_pre_test_operations(self, host_objs: List[Host]) -> None:
         """Arbitrary pre-test actions taken on each host."""
         pass
