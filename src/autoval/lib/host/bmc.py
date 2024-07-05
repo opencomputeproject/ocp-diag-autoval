@@ -6,7 +6,7 @@ from typing import List
 
 from autoval.lib.host.credentials import Credentials
 from autoval.lib.test_args import TEST_CONTROL
-from autoval.lib.utils.autoval_exceptions import AutoValException, TestError
+from autoval.lib.utils.autoval_exceptions import AutoValException, TestError, TestInputError
 from autoval.lib.utils.autoval_utils import AutovalLog, AutovalUtils
 
 from autoval.lib.utils.decorators import retry
@@ -84,9 +84,21 @@ class BMC:
         return fru
 
     def _get_slot(self) -> str:
+        """
+        Retrieve the slot number of the host.
+
+        Returns:
+            The slot number of the host.
+        Raises:
+            TestInputError: if the slot cannot be found
+        """
         slot_details = self.run(f"/usr/local/bin/slot-util {self.host.hostname}")
-        slot_number = slot_details.splitlines()[1].strip().split(":")[0]
-        return slot_number
+        if re.search(r"\bslot\d+\b", slot_details):
+            slot_number = slot_details.splitlines()[1].strip().split(":")[0]
+            return slot_number
+        raise TestInputError(
+            "Provide slot details using format slot_info : <slot_number> in test_control"
+        )
 
     def power_status(self) -> str:
         """
