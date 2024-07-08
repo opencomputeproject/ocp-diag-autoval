@@ -393,7 +393,7 @@ class SiteUtils:
         except Exception:
             pass
         # Cleanup DUT log_dirs from all DUT's
-        if connect_to_host and cls.get_site_settings().get("cleanup_dut_logdirs", True):
+        if connect_to_host:
             cls.cleanup_dut_logdirs(hosts)
 
     @classmethod
