@@ -1,6 +1,7 @@
 import datetime
 import re
 import time
+import json
 from enum import Enum
 from typing import List
 
@@ -83,10 +84,45 @@ class BMC:
             )
         return fru
 
+    def get_network_serials(self) -> List[str]:
+        """
+        Get the serial numbers of all network devices on the host.
+
+        Returns:
+            A list of strings containing the serial numbers of all network devices on the host.
+        """
+        json_out = self.host.run("lshw -json -class network")
+        networks = json.loads(json_out)
+        if isinstance(networks, list):
+            return [network["serial"] for network in networks]
+        return [networks["serial"]]
+
     def _get_slot(self) -> str:
-        slot_details = self.run(f"/usr/local/bin/slot-util {self.host.hostname}")
-        slot_number = slot_details.splitlines()[1].strip().split(":")[0]
-        return slot_number
+        """
+        Retrieve the slot number of the host.
+
+        Returns:
+            The slot number of the host.
+        Raises:
+            TestInputError: if the slot cannot be found
+        """
+        # Ignore status because `slot-util --show-mac` exits with 1 on success
+        slot_details = self.run_get_result(
+            cmd="/usr/local/bin/slot-util --show-mac", ignore_status=True
+        ).stdout
+        lines = slot_details.split("\n")
+        mac_addr_to_slot = {}
+        for line in lines:
+            if "MAC" in line:
+                slot, mac_addr = line.split(" MAC:")
+                if mac_addr:
+                    mac_addr_to_slot[mac_addr.strip()] = slot
+        for serial_number in self.get_network_serials():
+            if serial_number in mac_addr_to_slot:
+                return mac_addr_to_slot[serial_number]
+        raise TestInputError(
+            "Provide slot details using format slot_info: <slot_number> in test_control"
+        )
 
     def power_status(self) -> str:
         """
