@@ -31,7 +31,7 @@ class BMC:
     This class represents a BMC (Baseboard Management Controller) and provides methods to interact with it.
     """
 
-    CRITICAL_SERVICES_MIN_UPTIME = 120
+    CRITICAL_SERVICES_MIN_UPTIME = 300
 
     # pyre-fixme[2]: Parameter must be annotated.
     def __init__(self, connection, host) -> None:
@@ -206,7 +206,7 @@ class BMC:
         for service in services:
             self.check_service_uptime(service, self.CRITICAL_SERVICES_MIN_UPTIME)
 
-    @retry(tries=10, sleep_seconds=10)
+    @retry(tries=10, sleep_seconds=30)
     def check_service_uptime(self, service: str, expected_uptime: int) -> None:
         """
         Checks that the uptime of a given service is >= expected uptime. If service is not running, it will be started.
