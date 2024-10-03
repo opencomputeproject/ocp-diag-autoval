@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import getpass
+import json
 import os
 import re
 import traceback
@@ -111,7 +112,8 @@ class SiteUtils:
         site_settings_env = os.environ.get(env_var, default_name)
         # check if the env var contains a json or a path
         try:
-            loaded_settings = GenericUtils.loads_json(site_settings_env)
+            content = GenericUtils.read_file(site_settings_env)
+            loaded_settings = json.loads(content.strip())
             return loaded_settings
         except Exception:
             # do not need to do anything in case of exception
