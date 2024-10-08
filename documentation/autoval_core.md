@@ -55,8 +55,7 @@ The site settings should be exported once before actually running the tests to a
 
 For example, Autoval SSH modules would require environment variable ssh_key_path to help point it towards the right path to the certificates file
 
-```markdown
-```json
+```
 {
   "control_server_logdir": "/autoval/logs/",
   "control_server_tmpdir": "/tmp/autoval/",
@@ -87,7 +86,6 @@ In order to make use of the yum repository, follow this guide to install yum rep
 
 To export site settings, put the following command in the terminal used to run tests.
 
-```markdown
-```bash
+```
 export SITE_SETTINGS=src/autoval/cfg/site_settings/site_settings.json
 ```
