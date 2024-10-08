@@ -11,8 +11,9 @@ import time
 from enum import Enum
 from typing import List
 
-import autoval.lib.utils.decorators as av_deco
 import six
+
+import autoval.lib.utils.decorators as av_deco
 from autoval.lib.host.host import Host
 from autoval.lib.test_args import TEST_CONFIG, TEST_CONTROL, TEST_HOSTS, TestArgs
 from autoval.lib.test_utils.bg_runner import BgMonitor
@@ -302,7 +303,7 @@ class TestBase:
 
         self._process_test_result()
         self.result_handler.print_test_summary()
-        
+
     def _host_pre_test_operations(self, host_objs: List[Host]) -> None:
         """Arbitrary pre-test actions taken on each host."""
         pass

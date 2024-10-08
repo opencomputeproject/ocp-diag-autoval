@@ -10,6 +10,7 @@ from datetime import datetime
 from typing import Dict
 
 import yaml
+
 from autoval.lib.utils.autoval_exceptions import CLIException
 from autoval.lib.utils.autoval_log import AutovalLog
 from autoval.lib.utils.file_actions import FileActions
