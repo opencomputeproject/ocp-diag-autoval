@@ -19,7 +19,7 @@ classifiers = [
 ]
 keywords = ["ocp", "ocptv", "autoval", "hardware", "testing", "framework"]
 dependencies = [
-    "setuptools==69.5.1",  # using pkg_resources
+    "setuptools==70.0.0",  # using pkg_resources
     "ocptv==0.1.6",
     "six",
     "iopath",
