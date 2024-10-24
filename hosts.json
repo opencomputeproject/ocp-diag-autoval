@@ -1,0 +1,14 @@
+{
+    "hosts": [
+        {
+            "hostname": "10::CD97:E10F:FE82:9A1C",
+
+
+            "username": "root",
+            "password": "password",
+            "oob_addr": "10::CD97:E10F:FE82:9A19",
+            "oob_username": "root",
+            "oob_password": "password"
+        }
+    ]
+}

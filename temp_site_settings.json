@@ -1,0 +1,14 @@
+{
+
+    "control_server_logdir": "/tmp/autoval/logs/",
+    "control_server_tmpdir": "/tmp/autoval/",
+    "dut_logdir": "/tmp/autoval/logs/",
+    "dut_tmpdir": "/tmp/autoval/",
+    "resultsdir": "/tmp/autoval/results/",
+    "ssh_key_path": ["/USERNAME/.ssh/id_rsa"],
+    "plugin_config_path" : "plugins/plugin_config.json",
+    "repository_dir": "/tmp/autoval/repository/",
+    "test_utils_plugin_config_path" : "plugins/test_utils_plugin_config.json",
+    "cleanup_dut_logdirs" : false,
+    "yum_repo": "autoval-tools"
+}

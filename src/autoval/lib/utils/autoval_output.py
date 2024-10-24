@@ -14,7 +14,6 @@ _version = (
 try:
     if _version >= 3.7:
         import ocptv.output as tv
-        from autoval.lib.utils.autoval_errors import ErrorType
         from ocptv.output import (
             DiagnosisType,
             LogSeverity,
@@ -23,6 +22,8 @@ try:
             ValidatorType,
             Writer,
         )
+
+        from autoval.lib.utils.autoval_errors import ErrorType
 
         # pyre-fixme[5]: Global expression must be annotated.
         OPERATION_OCP_VALIDATOR_MAP = {
