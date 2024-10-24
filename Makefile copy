@@ -1,0 +1,23 @@
+
+PYTHON_LINTER = flake8
+PYTHON_FORMATTER = black
+
+lint_check:
+	@echo "Running Python linter (flake8)"
+	$(PYTHON_LINTER) .
+
+format:
+	@echo "Running python formatter (black)"
+	$(PYTHON_FORMATTER) .
+
+check_code:
+	@echo "Checking Python code style "
+	$(PYTHON_LINTER)
+	$(PYTHON_FORMATTER) --check_code .
+	@echo "Check completed"
+
+help:
+	@echo "Makefile commands:"
+	@echo " make lint   - Run Python linter (flake8)"
+	@echo " make format   - Run Python formatter (black)"
+	@echo " make check   - Chech for style errors (combo of lint and format)"
