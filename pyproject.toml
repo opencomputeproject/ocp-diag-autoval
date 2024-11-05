@@ -41,4 +41,3 @@ autoval_test_runner = "autoval.autoval_test_runner:main"
 
 [tool.setuptools.package-data]
 "*" = ["*.json"]
-

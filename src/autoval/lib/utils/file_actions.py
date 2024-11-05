@@ -10,6 +10,8 @@ from typing import Any, Dict, IO, List, Optional, Union
 
 import pkg_resources
 
+from iopath.common.file_io import g_pathmgr
+
 from autoval.lib.connection.connection_abstract import ConnectionAbstract
 from autoval.lib.utils.autoval_errors import ErrorType
 from autoval.lib.utils.autoval_exceptions import (
@@ -23,8 +25,6 @@ from autoval.lib.utils.autoval_utils import AutovalUtils
 from autoval.lib.utils.generic_utils import GenericUtils
 from autoval.lib.utils.site_utils import SiteUtils
 from autoval.plugins.plugin_manager import PluginManager
-
-from iopath.common.file_io import g_pathmgr
 
 FS_RETRY_LIMIT = 6
 FS_SLEEP_TIME = 2
