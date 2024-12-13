@@ -89,3 +89,29 @@ To export site settings, put the following command in the terminal used to run t
 ```
 export SITE_SETTINGS=src/autoval/cfg/site_settings/site_settings.json
 ```
+
+## OCP Diag output
+### What is OCP Diag output?
+OCP Diag output is an output that follows the standardized format for the structuring and transmission of test information emitted from a diagnositc based on [OCP Test and Validation Specification](https://github.com/opencomputeproject/ocp-diag-core/blob/main/json_spec/README.md#def-spec). This allows for the analysis and final determination of verdict on the overall health of the hardware/software under test.
+
+It is in structure of line delimited JSON where every newline is escaped to allow for newline character to delimit individual JSON documents and is saved as a jsonl file after the test.
+
+Each line in the output has an artifact that is contained by an OutputArtifact object where:
+- `"sequenceNumber"`: helps designate order of outputs
+- `"timestamp"`: keeps up with time to help pinpoint when this step took place
+- `<artifact>`: where descendents like `SchemaVersionArtifact`, `TestRunArtifact`, and `TestStepArtifact` exist as JSON-type element.
+
+For more information regarding the structure of the output, please read [here](https://github.com/opencomputeproject/ocp-diag-core/blob/main/json_spec/README.md#outputartifacts).
+
+### How to enable OCP Diag output
+In order to enable OCP Diag output so that the output is available as a separate file after running an autoval test, all one has to do is simply add `"enable_ocp_diag_output"` in the test control json file used for the test as one of the parameters and set `true` as its value.
+
+Example:
+```
+{
+    ...
+    "enable_ocp_diag_output": true
+}
+```
+
+As a result, one should be able to see the output in this jsonl file: [example_ocp_diag_output.jsonl](example_ocp_diag_output.jsonl)

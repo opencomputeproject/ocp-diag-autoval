@@ -1,0 +1,11 @@
+{"schemaVersion": {"major": 2, "minor": 0}, "sequenceNumber": 0, "timestamp": "2024-12-11T17:37:17.615831Z"}
+{"testRunArtifact": {"testRunStart": {"name": "ConnectTest", "version": "1.0", "commandLine": "autoval.tests.connect_test -c /home/<USERNAME>/hosts.json --args {\"skip_machinechecker\": true, \"disable_config_collection\": true, \"enable_ocp_diag_output\": true}", "parameters": {"skip_machinechecker": true, "disable_config_collection": true, "enable_ocp_diag_output": true}, "dutInfo": {"dutInfoId": "rtptest413.nha2", "name": "rtptest413.nha2", "platformInfos": [], "softwareInfos": [], "hardwareInfos": []}}}, "sequenceNumber": 1, "timestamp": "2024-12-11T17:37:17.616079Z"}
+{"testStepArtifact": {"testStepId": "0", "testStepStart": {"name": "test-step"}}, "sequenceNumber": 2, "timestamp": "2024-12-11T17:37:19.580904Z"}
+{"testStepArtifact": {"testStepId": "0", "measurement": {"name": "measurement", "value": "", "validators": [{"name": "isNotException-validator", "type": "EQUAL", "value": ""}]}}, "sequenceNumber": 3, "timestamp": "2024-12-11T17:37:19.581328Z"}
+{"testStepArtifact": {"testStepId": "0", "diagnosis": {"verdict": "NOT_ACCESSIBLE_ERR", "type": "PASS", "message": "connected to host"}}, "sequenceNumber": 4, "timestamp": "2024-12-11T17:37:19.581733Z"}
+{"testStepArtifact": {"testStepId": "0", "testStepEnd": {"status": "COMPLETE"}}, "sequenceNumber": 5, "timestamp": "2024-12-11T17:37:19.582009Z"}
+{"testStepArtifact": {"testStepId": "1", "testStepStart": {"name": "test-step"}}, "sequenceNumber": 6, "timestamp": "2024-12-11T17:37:20.019841Z"}
+{"testStepArtifact": {"testStepId": "1", "measurement": {"name": "measurement", "value": "", "validators": [{"name": "isNotException-validator", "type": "EQUAL", "value": ""}]}}, "sequenceNumber": 7, "timestamp": "2024-12-11T17:37:20.020274Z"}
+{"testStepArtifact": {"testStepId": "1", "diagnosis": {"verdict": "NOT_ACCESSIBLE_ERR", "type": "PASS", "message": "ping rtptest413-oob.nha2"}}, "sequenceNumber": 8, "timestamp": "2024-12-11T17:37:20.020568Z"}
+{"testStepArtifact": {"testStepId": "1", "testStepEnd": {"status": "COMPLETE"}}, "sequenceNumber": 9, "timestamp": "2024-12-11T17:37:20.020700Z"}
+{"testRunArtifact": {"testRunEnd": {"status": "COMPLETE", "result": "PASS"}}, "sequenceNumber": 10, "timestamp": "2024-12-11T17:37:20.020827Z"}
