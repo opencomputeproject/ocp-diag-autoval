@@ -10,8 +10,6 @@ from typing import Any, Dict, IO, List, Optional, Union
 
 import pkg_resources
 
-from iopath.common.file_io import g_pathmgr
-
 from autoval.lib.connection.connection_abstract import ConnectionAbstract
 from autoval.lib.utils.autoval_errors import ErrorType
 from autoval.lib.utils.autoval_exceptions import (
@@ -25,6 +23,8 @@ from autoval.lib.utils.autoval_utils import AutovalUtils
 from autoval.lib.utils.generic_utils import GenericUtils
 from autoval.lib.utils.site_utils import SiteUtils
 from autoval.plugins.plugin_manager import PluginManager
+
+from iopath.common.file_io import g_pathmgr
 
 FS_RETRY_LIMIT = 6
 FS_SLEEP_TIME = 2
@@ -407,11 +407,14 @@ class FileActions:
                 param,
                 timeout=remote_module_timeout,
             )"""
-            temp_path = cls._get_local_path(
+            return_path = cls._get_local_path(
                 remote_path, force, recursive, cache_dir, timeout_sec
             )
-            host.put_file(file_path=temp_path, target=local_path)
-            return local_path
+            if return_path == remote_path:
+                return_path = os.path.join(cache_dir, os.path.basename(remote_path))
+
+            host.put_file(file_path=remote_path, target=return_path)
+            return return_path
         else:
             if local_path:
                 cache_dir = local_path
