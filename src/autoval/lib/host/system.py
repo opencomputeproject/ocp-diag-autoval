@@ -205,7 +205,7 @@ class System:
         Checks the health of the system by verifying the connection and critical systemd services, defined in site settings.
         """
         try:
-            self.check_connection(tries=5, interval=30)
+            self.check_connection(tries=5, interval=60)
             self.check_services(SiteUtils.get_critical_services())
             passed = True
         except Exception as exc:
