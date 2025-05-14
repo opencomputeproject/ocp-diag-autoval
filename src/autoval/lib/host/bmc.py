@@ -3,11 +3,16 @@ import json
 import re
 import time
 from enum import Enum
-from typing import List
+from typing import Optional
 
 from autoval.lib.host.credentials import Credentials
 from autoval.lib.test_args import TEST_CONTROL
-from autoval.lib.utils.autoval_exceptions import AutoValException, TestError
+from autoval.lib.utils.autoval_exceptions import (
+    AutoValException,
+    CmdError,
+    TestError,
+    TestInputError,
+)
 from autoval.lib.utils.autoval_utils import AutovalLog, AutovalUtils
 
 from autoval.lib.utils.decorators import retry
@@ -130,6 +135,9 @@ class BMC:
         Returns:
             str: The power status of the FRU.
         """
+        time.sleep(300)
+        if self.is_busctl_supported():
+            return self.busctl_power_status()
         cmd = f"/usr/local/bin/power-util {self.get_fru_name()} status"
         status = self.run(cmd)
         return status
@@ -178,8 +186,10 @@ class BMC:
         Raises:
             AutoValException: If the reconnection or service check fails, or if the health check does not pass.
         """
+        self.reconnect()  # Should have been named connect?
+        if self.is_busctl_supported():
+            return self.post_cycle_check()
         try:
-            self.reconnect()  # Should have been named connect?
             self.check_services(self.get_critical_services())
             passed = True
         except Exception as exc:
@@ -312,25 +322,74 @@ class BMC:
             raise TestError("No supported trigger command found")
         return cmd
 
+    def is_busctl_supported(self) -> bool:
+        """
+        Check if busctl command is supported on the BMC.
+
+        Returns:
+            bool: True if busctl command is supported, False otherwise.
+        """
+        try:
+            cmd_output = self.bmc_host.run_get_result("busctl help")
+            return cmd_output.return_code == 0
+        except Exception:
+            return False
+
     # pyre-fixme[3]: Return type must be annotated.
     # pyre-fixme[2]: Parameter must be annotated.
     def get_cycle_command(self, slot_id=None):
         """Return dictionary of cycle commands"""
-        boot_dic = {}
-        boot_dic["sled-cycle"] = "/usr/local/bin/power-util sled-cycle"
-        if slot_id is None:
-            slot_id = self.get_fru_name()
-        cmd = "/usr/local/bin/power-util %s" % slot_id
-        boot_dic["ac"] = cmd + " " + "12V-cycle"
-        boot_dic["dc"] = cmd + " " + "cycle"
-        boot_dic["power-on"] = cmd + " " + "on"
-        boot_dic["power-off"] = cmd + " " + "off"
-        boot_dic["power-status"] = cmd + " " + "status"
-        boot_dic["12V-on"] = cmd + " " + "12V-on"
-        boot_dic["12V-off"] = cmd + " " + "12V-off"
-        boot_dic["graceful-shutdown"] = cmd + " " + "graceful-shutdown"
-        boot_dic["reset"] = cmd + " " + "reset"
-        return boot_dic
+        try:
+            if self.is_busctl_supported():
+                boot_dic = {}
+                if slot_id is None:
+                    slot_id = self.get_slot_info()
+                boot_dic["sled-cycle"] = (
+                    "busctl set-property xyz.openbmc_project.State.Chassis0 "
+                    "/xyz/openbmc_project/state/chassis0 "
+                    "xyz.openbmc_project.State.Chassis RequestedPowerTransition s "
+                    "'xyz.openbmc_project.State.Chassis.Transition.PowerCycle'"
+                )
+                cmd = (
+                    f"busctl set-property xyz.openbmc_project.State.Host{slot_id} "
+                    f"/xyz/openbmc_project/state/host{slot_id} "
+                    "xyz.openbmc_project.State.Host RequestedHostTransition s "
+                    "'xyz.openbmc_project.State.Host.Transition."
+                )
+                cmd_ac = (
+                    f"busctl set-property xyz.openbmc_project.State.Chassis{slot_id} "
+                    f"/xyz/openbmc_project/state/chassis{slot_id} "
+                    "xyz.openbmc_project.State.Chassis RequestedPowerTransition s "
+                    "'xyz.openbmc_project.State.Chassis.Transition."
+                )
+                boot_dic["ac"] = cmd_ac + "PowerCycle'"
+                boot_dic["12V-on"] = cmd_ac + "On'"
+                boot_dic["12V-off"] = cmd_ac + "Off'"
+                boot_dic["dc"] = cmd + "Reboot'"
+                boot_dic["power-on"] = cmd + "On'"
+                boot_dic["power-off"] = cmd + "Off'"
+                boot_dic["reset"] = cmd + "GracefulWarmReboot'"
+                boot_dic["graceful-shutdown"] = cmd + "GracefulWarmReboot'"
+            else:
+                boot_dic = {}
+                boot_dic["sled-cycle"] = "/usr/local/bin/power-util sled-cycle"
+                if slot_id is None:
+                    slot_id = self.get_fru_name()
+                cmd = "/usr/local/bin/power-util %s" % slot_id
+                boot_dic["ac"] = cmd + " " + "12V-cycle"
+                boot_dic["dc"] = cmd + " " + "cycle"
+                boot_dic["power-on"] = cmd + " " + "on"
+                boot_dic["power-off"] = cmd + " " + "off"
+                boot_dic["power-status"] = cmd + " " + "status"
+                boot_dic["12V-on"] = cmd + " " + "12V-on"
+                boot_dic["12V-off"] = cmd + " " + "12V-off"
+                boot_dic["graceful-shutdown"] = cmd + " " + "graceful-shutdown"
+                boot_dic["reset"] = cmd + " " + "reset"
+            return boot_dic
+        except Exception as e:
+            # Log any errors that occur during the execution of the method
+            print(f"Error occurred: {e}")
+            return None
 
     def cycle(
         self,
@@ -632,4 +691,110 @@ class BMC:
     # pyre-fixme[2]: Parameter must be annotated.
     def post_cycle_check(self, filter_errors=None) -> None:
         """Check post_cycle"""
+        if self.is_busctl_supported():
+            self.check_bic_status()
         return
+
+    def busctl_power_status(self, slot_info: Optional[int] = None) -> str:
+        """
+        Returns the power status of the device.
+
+        Power is considered to be on if either AC or DC power is on.
+
+        Args:
+            slot_info:  The slot for which to get power status
+
+        Returns:
+            "ON" if the power status is on, "OFF, otherwise.
+
+        Raises:
+            TestError if unable to get power status.
+        """
+        if slot_info is None:
+            slot_info = self.get_slot_info()
+        if self.get_dc_status(slot_info) and self.get_ac_status(slot_info):
+            return "ON"
+        return "OFF"
+
+    def get_slot_info(self) -> int:
+        """
+        Get slot position for busctl supported chassis System.
+        Returns:
+            The slot position of the busctl supported chassis System.
+        """
+        slot_info = TEST_CONTROL.get("slot_info", None)
+        if slot_info:
+            if isinstance(slot_info, str) and slot_info.startswith("slot"):
+                slot_info = slot_info.replace("slot", "")
+            return int(slot_info)
+        raise TestInputError(
+            "Provide slot details using format slot_info: <slot_number> in test_control"
+        )
+
+    @retry(tries=3, sleep_seconds=30, exceptions=CmdError)
+    def get_dc_status(self, slot_info: Optional[int] = None) -> str:
+        """
+        Get the DC status. Retries for 3 times in case of Cmderror.
+        Args:
+            slot_info: The slot number. Defaults to None.
+        Return:
+            True if slot has DC power, False otherwise.
+        """
+        if slot_info is None:
+            slot_info = self.get_slot_info()
+        dc_cmd = (
+            f"gpioget $(basename '/sys/bus/i2c/devices/{slot_info}-0023/'*gpiochip*) 16"
+        )
+        return dc_cmd
+
+    @retry(tries=3, sleep_seconds=30, exceptions=CmdError)
+    def get_ac_status(self, slot_info: Optional[int] = None) -> str:
+        """
+        Checks the AC status. Retries for 3 times in case of Cmderror.
+        Args:
+            slot_info: The slot number. Defaults to None.
+        Returns:
+            True if slot has AC power, False otherwise.
+        """
+        if slot_info is None:
+            slot_info = self.get_slot_info()
+        ac_cmd = (
+            f"gpioget $(basename '/sys/bus/i2c/devices/28-0021/'*gpiochip*) {slot_info}"
+        )
+        return ac_cmd
+
+    def check_bic_status(self, slot_info: Optional[int] = None) -> None:
+        """
+        Get the BIC status and BIC version.
+
+        Args:
+            slot_info: The slot number. Defaults to None.
+
+        """
+        slot_info = self.get_slot_info()
+        bic_version_cmd = f"pldmtool fw_update GetFwParams -m {slot_info}0 | grep 'ActiveComponentImageSetVersionString'"
+        version = self.bmc_host.run(bic_version_cmd, ignore_status=True)
+        match = re.search(
+            r'"ActiveComponentImageSetVersionString"\s*:\s*"([^"]+)"', version
+        )
+        if match:
+            bic_version = match.group(1)
+            AutovalUtils.validate_condition(
+                self.get_bic_status(),
+                f"BIC Status is ON, BIC Version is {bic_version} for {self.host.hostname}",
+            )
+        else:
+            raise TestError("Unable to get BIC version using pldmtool")
+
+    def get_bic_status(self, slot_info: Optional[int] = None) -> bool:
+        """
+        Get the BIC status.
+
+        Return:
+            True if BIC status is ON, False otherwise.
+        """
+        if slot_info is None:
+            slot_info = self.get_slot_info()
+        cmd = f"gpioget $(basename '/sys/bus/i2c/devices/{slot_info}-0024/'gpiochip*) 1"
+        out = self.bmc_host.run(cmd)
+        return out == "1"
