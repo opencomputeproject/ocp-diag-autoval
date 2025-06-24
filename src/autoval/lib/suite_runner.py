@@ -27,7 +27,10 @@ class SuiteRunner:
         self.suite_logs = self.create_suite_log_path()
         self.suite_results = {"pass": 0, "fail": 0}
         # pyre-fixme[4]: Attribute must be annotated.
-        self.configurator = self.autoval_cli.configurator
+        if hasattr(self.autoval_cli, "configurator"):
+            self.configurator = self.autoval_cli.configurator
+        else:
+            self.configurator = None
         # pyre-fixme[4]: Attribute must be annotated.
         self.control_server_temp_dir = control_server_temp_dir
 

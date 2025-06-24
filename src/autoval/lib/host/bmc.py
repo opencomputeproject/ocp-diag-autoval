@@ -3,7 +3,7 @@ import json
 import re
 import time
 from enum import Enum
-from typing import Optional
+from typing import List, Optional
 
 from autoval.lib.host.credentials import Credentials
 from autoval.lib.test_args import TEST_CONTROL
