@@ -94,6 +94,7 @@ class AutovalThread(threading.Thread):
         # pyre-fixme[2]: Parameter must be annotated.
         queue_thread_list,
         timeout: Optional[int] = None,
+        **kwargs,
     ):
         """
         The function takes the list of tuples returned from above function as input
@@ -104,6 +105,8 @@ class AutovalThread(threading.Thread):
         Args:
             queue_thread_list: List of AutoVal threads to wait
             timeout: Timeout for threads to complete
+            kwargs: Additional arguments for the function used by flash firmware update test
+                - flash_firmware_update_data: List of data for flash firmware update
 
         Raises:
             AutovalThreadError: If any of one of the thread raises an exception
@@ -111,6 +114,8 @@ class AutovalThread(threading.Thread):
         errs = []
         results = []
         first_exception = None
+        flash_firmware_update_data = kwargs.get("flash_firmware_update_data", [])
+
         for t, q in queue_thread_list:
             t.join(timeout)
             try:
@@ -121,6 +126,11 @@ class AutovalThread(threading.Thread):
                 errs.append(error_message)
             except queue.Empty:
                 results.append(t._return)
+                (
+                    flash_firmware_update_data.append(t._return)
+                    if t._return is not None
+                    else None
+                )
         if len(errs) > 0:
             error_type = getattr(first_exception, "error_type", None)
             component = getattr(first_exception, "component", None)
