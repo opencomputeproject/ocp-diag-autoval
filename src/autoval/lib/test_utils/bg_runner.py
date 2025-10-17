@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+
+# pyre-strict
 """
 This module allows to run test utils (implemented as TestUtils modules) in
 parallel to the current test. It supports 2 use cases:
@@ -6,6 +8,7 @@ parallel to the current test. It supports 2 use cases:
     - BgRunner to run a test in the background and stop it when needed by the
     current test
 """
+
 # ==============================================================================
 # Copyright (c) 2016-present, Facebook, Inc.
 # All rights reserved.
@@ -51,6 +54,8 @@ class BgRunner:
             'interval': <interval to loop>,
         """
         # pyre-fixme[4]: Attribute must be annotated.
+        self.host = host
+        # pyre-fixme[4]: Attribute must be annotated.
         self.host_dict = AutovalUtils.get_host_dict(host)
         # pyre-fixme[4]: Attribute must be annotated.
         self._thread = None
@@ -88,11 +93,26 @@ class BgRunner:
         This method waits for the started thread to complete and
         It stops Bg Runner once the started thread got completed.
         """
+        self.stop_runner = True
+
+    def wait_for_bg_runner_to_stop(self) -> None:
+        """
+        Waits for the background runner thread to complete its execution.
+        Args:
+            None
+        Returns:
+            None
+        """
         if self._thread is not None:
-            AutovalLog.log_info("Waiting for BG Runner to Complete")
+            AutovalLog.log_info(
+                f"Waiting for bg runner {self.runner_name} to complete on host {self.host.hostname}"
+            )
             self.stop_runner = True
             AutovalThread.wait_for_autoval_thread([self._thread])
             self._thread = None
+        AutovalLog.log_info(
+            f"BG runner {self.runner_name} completed on host {self.host.hostname}"
+        )
 
     def _start_test(self) -> None:
         """Start test.
