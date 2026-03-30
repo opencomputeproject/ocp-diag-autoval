@@ -1,0 +1,89 @@
+{
+  "name": "fio_runner",
+  "rules": [
+    {
+      "criteria": {
+        "model_ids": [
+
+        ],
+        "workload": [
+          "qlc_performance"
+        ]
+      },
+      "metric_threshold_pair": [
+        {
+          "metric": "read_99.000000",
+          "value": 0.025,
+          "unit": "s",
+          "comparison": "<"
+        },
+        {
+          "metric": "write_99.000000",
+          "value": 0.1,
+          "unit": "s",
+          "comparison": "<"
+        }
+      ],
+      "name": "qlc_workload_rule"
+    },
+    {
+      "metric_threshold_pair": [
+        {
+          "metric": "iops",
+          "value": 0,
+          "unit": "score",
+          "comparison": ">"
+        },
+        {
+          "metric": "iops_diff",
+          "value": 20,
+          "unit": "%",
+          "comparison": "<="
+        },
+        {
+          "metric": "latency_100",
+          "value": 100,
+          "unit": "ms",
+          "comparison": "<"
+        },
+        {
+          "metric": "read_bw",
+          "value": 0,
+          "unit": "score",
+          "comparison": ">"
+        },
+        {
+          "metric": "write_bw",
+          "value": 0,
+          "unit": "score",
+          "comparison": ">"
+        },
+        {
+          "metric": "read_max_lat",
+          "value": 10,
+          "unit": "s",
+          "comparison": "<"
+        },
+        {
+          "metric": "read_99.000000",
+          "value": 1,
+          "unit": "s",
+          "comparison": "<"
+        },
+        {
+          "metric": "write_max_lat",
+          "value": 10,
+          "unit": "s",
+          "comparison": "<"
+        },
+        {
+          "metric": "write_99.000000",
+          "value": 1,
+          "unit": "s",
+          "comparison": "<"
+        }
+      ],
+      "name": "default_rule"
+    }
+  ]
+}
