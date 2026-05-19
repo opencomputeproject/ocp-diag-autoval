@@ -1,0 +1,45 @@
+{
+    "name": "latency_monitor",
+    "rules": [
+        {
+            "criteria": {
+                "workload": [
+                    "Nvme_Cli_Wkld"
+                ]
+            },
+            "metric_threshold_pair": [
+                {
+                    "metric": "bucket_timer",
+                    "value": 2016,
+                    "unit": "5min",
+                    "comparison": "<"
+                },
+                {
+                    "metric": "bucket_a",
+                    "value": 0,
+                    "unit": "5ms",
+                    "comparison": "<"
+                },
+                {
+                    "metric": "bucket_b",
+                    "value": 1,
+                    "unit": "5ms",
+                    "comparison": "<"
+                },
+                {
+                    "metric": "bucket_c",
+                    "value": 2,
+                    "unit": "5ms",
+                    "comparison": "<"
+                },
+                {
+                    "metric": "bucket_d",
+                    "value": 3,
+                    "unit": "5ms",
+                    "comparison": "<"
+                }
+            ],
+            "name": "Nvme_Cli_Wkld_thresholds"
+        }
+    ]
+}
