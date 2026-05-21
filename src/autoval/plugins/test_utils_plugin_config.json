@@ -1,0 +1,7 @@
+[
+    {
+        "class": "NvmeCommandRunner",
+        "module": "autoval.lib.test_utils.nvme_command_runner",
+        "name": "nvme_command"
+    }
+]
